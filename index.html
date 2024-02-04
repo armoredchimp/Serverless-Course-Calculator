@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Course Calculator</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Roboto:wght@100;300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="title-cont">
+      <div></div>
+      <h1>Course calculator version <span class="version-num">0.04</span></h1>
+      <div class="sign-in">
+        <button class="login">Login / Register</button>
+        <div class="authd">
+          <span class="authdPre"
+            >Logged in as <span class="authdUser">test</span></span
+          >
+          <div class="cloud-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="upload-to-cloud"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ultra-cont">
+      <div class="top-cont">
+        <div class="sort-cont">
+          <div class="sort-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="sort asc"
+              id="ascend-icon"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 4.5h14.25M3 9h9.75M3 13.5h5.25m5.25-.75L17.25 9m0 0L21 12.75M17.25 9v12"
+              />
+            </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="sort desc"
+              id="descend-icon"
+              style="display: none"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 4.5h14.25M3 9h9.75M3 13.5h9.75m4.5-4.5v12m0 0l-3.75-3.75M17.25 21L21 17.25"
+              />
+            </svg>
+          </div>
+          <label for="sortCriteria">Sort by:</label>
+          <select id="sortCriteria" class="sortCriteria">
+            <option value="progress">% Complete</option>
+            <option value="hoursRemaining">Remaining</option>
+          </select>
+        </div>
+        <div class="toggle-complete-wrapper">
+          <span>Show completed courses</span>
+          <button id="toggle-completed" class="fas fa-toggle-on"></button>
+        </div>
+        <div class="color-wrapper">
+          <label for="colorScheme">Color Scheme</label>
+          <select id="colorScheme" class="hidden-dropdown">
+            <option value="dark">Dark Mode</option>
+            <option value="colorful">Colorful</option>
+            <option value="simple">Simple</option>
+          </select>
+        </div>
+        <button class="add-new">Add Course</button>
+      </div>
+      <div class="message-cont">
+        <h4>No courses loaded</h4>
+        <h3 class="addLink highlighted-1">Add a new course</h3>
+        <p>or</p>
+        <h3 class="sampleLink highlighted-2">
+          Click here to load a sample courseload
+        </h3>
+      </div>
+    </div>
+    <ul class="course"></ul>
+    <p class="result"></p>
+    <div class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Add a New Course</h3>
+        <label for="courseName">Course Name:</label>
+        <input type="text" id="courseName" />
+        <label for="totalHours">Total Course Length (in hours):</label>
+        <input type="number" id="totalHours" />
+        <button class="addCBtn" id="addCourseBtn">Add Course</button>
+      </div>
+    </div>
+    <div class="modal-login">
+      <div class="modal-login-content">
+        <span class="closeL">&times;</span>
+        <label for="emailText">Email Address</label>
+        <input type="text" id="emailText" />
+        <!-- <label for="loginText">Username</label>
+        <input type="text" id="loginText" /> -->
+        <label for="passwordText">Password</label>
+        <input type="text" id="passwordText" />
+        <div class="login-buttons-cont">
+          <button class="loginBtn">Login</button>
+          <button class="regBtn">Register</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-edit">
+      <div class="edit-modal-content">
+        <span class="closeE">&times;</span>
+        <h3>Edit Course</h3>
+        <label for="courseNameE">Course Name:</label>
+        <input type="text" id="courseNameE" />
+        <label for="totalHoursE">Total Course Length (in hours):</label>
+        <input type="number" id="totalHoursE" />
+        <label for="totalHoursC">Hours Completed:</label>
+        <input type="number" id="totalHoursC" />
+        <label for="percentComp">Percentage Completed:</label>
+        <input type="number" id="percentComp" />
+        <button class="editCBtn" id="editCourseBtn">Edit Course</button>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="config.js"></script>
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
