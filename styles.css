@@ -340,7 +340,7 @@ h1 {
 .add-new:active {
   background-color: #2d595f;
 }
-.modal,
+.addC-modal,
 .modal-edit {
   display: none;
   position: fixed;

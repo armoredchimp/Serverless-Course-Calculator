@@ -10,6 +10,10 @@ import {
 
 //Selectors
 const courseUL = document.querySelector('.courses');
+const addNew = document.querySelector('.add-new');
+const addCmodal = document.querySelector('.addC-modal');
+const addCourseBtn = document.getElementById('addCourseBtn');
+////
 let state = {
   courses: [], // Array for all courses
   displayCourses: [], // Array only for courses not hidden by toggle
@@ -55,9 +59,8 @@ class Course {
 class CourseItem extends Course {
   constructor(name, totalHours, progress, id) {
     super(name, totalHours, progress, id);
-    this.completedHours = this.completedHours();
-    this.remainingHours = this.remainingHours();
     this.progressColor = percentColor(this.progress);
+    this.colorR = getColor(this.remainingHours);
     this.element = document.createElement('div');
     this.element.className = 'course-line';
     this.element.innerHTML = `
@@ -66,11 +69,9 @@ class CourseItem extends Course {
       this.progress
     }%</span> of the ${this.totalHours}-hour ${
       this.name
-    } course has been completed, which is roughly ${
-      this.completedHours
-    } hours. <span style="color: ${colorR};">${this.remainingHours.toFixed(
-      2
-    )}</span> hours remain for this course.
+    } course has been completed, which is roughly ${this.completedHours()} hours. <span style="color: ${
+      this.colorR
+    };">${this.remainingHours().toFixed(2)}</span> hours remain for this course.
     </div>
     <div class="course-actions">
       <button class="reset-button">Reset</button>
@@ -89,7 +90,7 @@ function renderCourses() {
   courseUL.innerHTML = '';
 
   state.displayCourses.forEach((course) => {
-    const courseItem = new courseItem(
+    const courseItem = new CourseItem(
       course.name,
       course.totalHours,
       course.progress,
@@ -101,20 +102,15 @@ function renderCourses() {
   });
 }
 
-sampleLink.addEventListener('click', () => {
-  const apiUrl = config.API_URL;
+addNew.addEventListener('click', () => {
+  addCmodal.style.display = 'block';
+});
 
-  axios
-    .get(apiUrl)
-    .then((response) => {
-      const courses = response.data.courses;
-      // Create Course instances from each object in the array
-      console.log(courses);
-      courses.map((obj) => new Course(obj.name, obj.totalHours, obj.progress));
-    })
-    .catch((error) => {
-      console.error('Error fetching courses:', error);
-    });
-
-  sampleClose();
+addCourseBtn.addEventListener('click', () => {
+  const courseName = document.getElementById('addCourseName').value;
+  const totalHours = Number(document.getElementById('addTotalHours').value);
+  const newCourse = new Course(courseName, totalHours, 0);
+  console.log(state.courses, state.displayCourses);
+  renderCourses();
+  addCmodal.style.display = 'none';
 });
