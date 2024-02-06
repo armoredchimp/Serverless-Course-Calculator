@@ -239,8 +239,13 @@ h1 {
   color: var(--secondary-color);
 }
 .minus-icon {
-  width: 100%;
+  width: 2%;
   cursor: pointer;
+  color: var(--minus-color);
+}
+.minus-icon:hover,
+.minus-icon:active {
+  color: var(--red-color);
 }
 .loginBtn,
 .regBtn {
@@ -266,7 +271,7 @@ h1 {
 }
 .course-line {
   display: flex;
-  justify-content: space-between;
+  gap: 5rem;
   border-radius: 15px;
   padding: 0.5rem;
   padding-left: 1rem;
@@ -277,9 +282,15 @@ h1 {
   align-items: center;
   gap: 0.3rem;
   font-size: 1rem;
+  flex: 3;
+  flex-wrap: wrap;
 }
 .course-actions {
   display: flex;
+  margin-right: 10rem;
+  gap: 2rem;
+  justify-content: flex-end;
+  flex: 1;
 }
 .reset-button,
 .edit-button {
@@ -307,6 +318,7 @@ h1 {
 }
 .ultra-cont {
   position: relative;
+  margin-bottom: 3rem;
 }
 .top-cont {
   display: flex;
