@@ -57,13 +57,18 @@ class Course {
 }
 
 class CourseItem extends Course {
-  constructor(name, totalHours, progress, id) {
-    super(name, totalHours, progress, id);
+  constructor(name, totalHours, progress) {
+    super(name, totalHours, progress);
     this.progressColor = percentColor(this.progress);
     this.colorR = getColor(this.remainingHours);
+  }
+
+  render() {
     this.element = document.createElement('div');
     this.element.className = 'course-line';
     this.element.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="minus-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
     <div class="course-details">
       <span style="color: ${this.progressColor};">${
       this.progress
@@ -90,14 +95,14 @@ function renderCourses() {
   courseUL.innerHTML = '';
 
   state.displayCourses.forEach((course) => {
-    const courseItem = new CourseItem(
-      course.name,
-      course.totalHours,
-      course.progress,
-      course.id
-    );
+    course.render();
     const listItem = document.createElement('li');
-    listItem.appendChild(courseItem.element);
+    listItem.appendChild(course.element);
+    const minusSelector = listItem.querySelector('.minus-icon');
+    minusSelector.addEventListener('click', () => {
+      course.delete();
+      console.log(state.courses, state.displayCourses);
+    });
     courseUL.appendChild(listItem);
   });
 }
@@ -109,7 +114,7 @@ addNew.addEventListener('click', () => {
 addCourseBtn.addEventListener('click', () => {
   const courseName = document.getElementById('addCourseName').value;
   const totalHours = Number(document.getElementById('addTotalHours').value);
-  const newCourse = new Course(courseName, totalHours, 0);
+  const newCourse = new CourseItem(courseName, totalHours, 0);
   console.log(state.courses, state.displayCourses);
   renderCourses();
   addCmodal.style.display = 'none';
