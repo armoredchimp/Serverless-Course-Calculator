@@ -412,15 +412,12 @@ h1 {
   width: 20%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
-.close,
-.closeE,
-.closeL {
+.close {
   color: #aaaaaa;
   float: right;
   font-size: 28px;
   font-weight: bold;
   cursor: pointer;
-  /* margin-left: 10px; */
 }
 .addCBtn,
 .editCBtn {
