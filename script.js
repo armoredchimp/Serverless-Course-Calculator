@@ -10,34 +10,35 @@ import {
 
 //Selectors
 const courseUL = document.querySelector('.courses');
+//Add Course Selectors
 const addNew = document.querySelector('.add-new');
 const addCmodal = document.querySelector('.addC-modal');
 const addCourseBtn = document.getElementById('addCourseBtn');
+//Sorting Selectors
+const sortIcon = document.querySelector('.sort-icon');
+const sortCriteria = document.getElementById('sortCriteria');
+const ascendIcon = document.getElementById('ascend-icon');
+const descendIcon = document.getElementById('descend-icon');
 ////
 let state = {
   courses: [], // Array for all courses
-  displayCourses: [], // Array only for courses not hidden by toggle
+  displayCourses: [],
+  hiddenCourses: [],
   showCompleted: true,
   sortCriteria: 'percent',
   ascending: true,
   id: 0,
 };
 
+//COURSE CREATION/RENDERING
 function getID() {
   const currentId = state.id + 1;
   state.id = currentId;
   return currentId;
 }
 
-function removeCourse(id) {
-  state.courses = state.courses.filter((course) => course.id !== id);
-  state.displayCourses = state.displayCourses.filter(
-    (course) => course.id !== id
-  );
-}
-
 class Course {
-  constructor(name, totalHours, progress = 0) {
+  constructor(name, totalHours, progress) {
     this.name = name;
     this.id = getID();
     this.totalHours = totalHours;
@@ -107,6 +108,52 @@ function renderCourses() {
   });
 }
 
+//SORTING
+sortIcon.addEventListener('click', () => {
+  state.ascending = !state.ascending;
+  sortCourses();
+  toggleSortIcon();
+});
+sortCriteria.addEventListener('change', () => {
+  sortCourses();
+  toggleSortIcon();
+});
+
+function toggleSortIcon() {
+  if (state.ascending) {
+    ascendIcon.style.display = 'none';
+    descendIcon.style.display = 'inline';
+  } else {
+    ascendIcon.style.display = 'inline';
+    descendIcon.style.display = 'none';
+  }
+}
+
+function sortCourses() {
+  sortArray(state.courses);
+  sortArray(state.displayCourses);
+  sortArray(state.hiddenCourses);
+
+  renderCourses();
+}
+
+function sortArray(array) {
+  const selectedCriteria = sortCriteria.value;
+  array.sort((a, b) => {
+    let compareA, compareB;
+
+    if (selectedCriteria === 'progress') {
+      compareA = a.progress;
+      compareB = b.progress;
+    } else {
+      compareA = a.remainingHours();
+      compareB = b.remainingHours();
+    }
+    return state.ascending ? compareA - compareB : compareB - compareA;
+  });
+}
+
+//ADD NEW COURSE
 addNew.addEventListener('click', () => {
   addCmodal.style.display = 'block';
 });
@@ -119,3 +166,11 @@ addCourseBtn.addEventListener('click', () => {
   renderCourses();
   addCmodal.style.display = 'none';
 });
+
+//REMOVE COURSE
+function removeCourse(id) {
+  state.courses = state.courses.filter((course) => course.id !== id);
+  state.displayCourses = state.displayCourses.filter(
+    (course) => course.id !== id
+  );
+}
