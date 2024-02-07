@@ -1,5 +1,21 @@
 ('use strict');
-
+{
+  /* <li class="completed-list" style="margin-top: 4rem">
+<span class="all-hours">0</span> hours out of
+<span class="total-hours">0</span> in total have been completed
+</li>
+<li class="completed-list">
+<span class="remaining-hours">0</span> hours remain
+</li>
+<li class="completed-list">
+<span class="completion-percent">0%</span> of the course has been
+completed
+</li>
+<li class="completed-list">
+<span class="remaining-percent">0%</span> of the course remains to be
+completed
+</li> */
+}
 import {
   getColor,
   bigColor,
@@ -38,6 +54,12 @@ const loginModal = document.querySelector('.modal-login');
 const closeModal = document.querySelector('.close');
 const closeEdit = document.querySelector('.closeEdit');
 const closeLogin = document.querySelector('.closeLogin');
+//Result Section
+const resCurHours = document.querySelector('.current-hours');
+const resTotHours = document.querySelector('.all-hours');
+const resRemHours = document.querySelector('.remaining-hours');
+const resCompPerc = document.querySelector('.completion-percent');
+const resRemPerc = document.querySelector('.remaining-percent');
 //
 //State Object
 let state = {
@@ -50,7 +72,7 @@ let state = {
   ascending: true,
   id: 0,
 };
-
+completed();
 //COURSE CREATION/RENDERING
 function getID() {
   const currentId = state.id + 1;
@@ -81,11 +103,11 @@ class Course {
 class CourseItem extends Course {
   constructor(name, totalHours, progress) {
     super(name, totalHours, progress);
-    this.progressColor = percentColor(this.progress);
-    this.colorR = getColor(this.remainingHours);
   }
 
   render() {
+    this.progressColor = percentColor(this.progress);
+    this.colorR = getColor(this.remainingHours);
     this.element = document.createElement('div');
     this.element.className = 'course-line';
     this.element.innerHTML = `
@@ -123,7 +145,7 @@ function renderCourses() {
     const minusSelector = listItem.querySelector('.minus-icon');
     const resetBtn = listItem.querySelector('.reset-button');
     resetBtn.addEventListener('click', () => {
-      resetCourse(course.id);
+      reset(course.id);
     });
     const editBtn = listItem.querySelector('.edit-button');
     editBtn.addEventListener('click', () => {
@@ -135,6 +157,7 @@ function renderCourses() {
     });
     courseUL.appendChild(listItem);
   });
+  completed();
 }
 
 //SORTING
@@ -258,6 +281,23 @@ function removeCourse(id) {
   state.hiddenCourses = state.hiddenCourses.filter(
     (course) => course.id !== id
   );
+  toggleCompleted();
+}
+
+//RESET COURSE
+function reset(id) {
+  resetCourse(id, state.courses);
+  resetCourse(id, state.displayCourses);
+  resetCourse(id, state.hiddenCourses);
+  toggleCompleted();
+}
+
+function resetCourse(id, array) {
+  state.currentEdit = id;
+  const course = array.find((course) => course.id === id);
+  if (course) {
+    course.progress = 0;
+  }
 }
 
 //EDIT COURSE
@@ -359,4 +399,36 @@ function resetModalValues() {
   editHours.value = '';
   editCurHours.value = '';
   editProgress.value = '';
+}
+
+//RESULT SECTION
+function completed() {
+  let compPercent = 0,
+    compRemPercent = 0,
+    compRemHours = 0,
+    allHours = 0,
+    compTotHours = 0;
+
+  state.courses.forEach((course) => {
+    compTotHours += course.completedHours();
+    allHours += course.totalHours;
+    compRemHours += course.remainingHours();
+  });
+
+  if (compTotHours !== 0) {
+    compPercent = Math.round((compTotHours / allHours) * 10000) / 100;
+    compRemPercent = Math.round((100 - compPercent) * 100) / 100;
+  }
+
+  resCurHours.textContent = compTotHours;
+  resTotHours.textContent = allHours.toFixed(2);
+  resRemHours.textContent = compRemHours;
+  resCompPerc.textContent = `${compPercent}`;
+  resRemPerc.textContent = `${compRemPercent}`;
+
+  resCurHours.style.color = bigColor(allHours.toFixed(2));
+  resTotHours.style.color = invertedBigColor(compTotHours);
+  resRemHours.style.color = bigColor(compRemHours);
+  resCompPerc.style.color = percentColor(compPercent);
+  resRemPerc.style.color = invertedPercentColor(compRemPercent);
 }
