@@ -14,6 +14,10 @@ const courseUL = document.querySelector('.courses');
 const addNew = document.querySelector('.add-new');
 const addCmodal = document.querySelector('.addC-modal');
 const addCourseBtn = document.getElementById('addCourseBtn');
+const addCName = document.getElementById('addCourseName');
+const addCHours = document.getElementById('addTotalHours');
+const addCCurrHours = document.getElementById('addCurrHours');
+const addCProgress = document.getElementById('addProgress');
 //Sorting Selectors
 const sortIcon = document.querySelector('.sort-icon');
 const sortCriteria = document.getElementById('sortCriteria');
@@ -23,8 +27,15 @@ const descendIcon = document.getElementById('descend-icon');
 const toggleBtn = document.getElementById('toggle-completed');
 //Edit Course
 const editCmodal = document.querySelector('.modal-edit');
+const editName = document.getElementById('courseNameE');
+const editHours = document.getElementById('totalHoursE');
+const editCurHours = document.getElementById('totalHoursC');
+const editProgress = document.getElementById('percentCompE');
+const editButton = document.getElementById('editCourseBtn');
+const closeEdit = document.querySelector('.closeEdit');
 //Login
 const loginModal = document.querySelector('.modal-login');
+const closeLogin = document.querySelector('.closeLogin');
 //X Button in modal window
 const closeModal = document.querySelector('.close');
 //
@@ -109,6 +120,14 @@ function renderCourses() {
     const listItem = document.createElement('li');
     listItem.appendChild(course.element);
     const minusSelector = listItem.querySelector('.minus-icon');
+    const resetBtn = listItem.querySelector('.reset-button');
+    resetBtn.addEventListener('click', () => {
+      resetCourse(course.id);
+    });
+    const editBtn = listItem.querySelector('.edit-button');
+    editBtn.addEventListener('click', () => {
+      editCourse(course.id);
+    });
     minusSelector.addEventListener('click', () => {
       course.delete();
       console.log(state.courses, state.displayCourses);
@@ -143,7 +162,7 @@ function sortCourses() {
   sortArray(state.displayCourses);
   sortArray(state.hiddenCourses);
 
-  renderCourses();
+  toggleCompleted();
 }
 
 function sortArray(array) {
@@ -190,28 +209,45 @@ function toggleCompleted() {
   renderCourses();
 }
 
-//ADD NEW COURSE
+//ADD / REMOVE COURSES
 addNew.addEventListener('click', () => {
   addCmodal.style.display = 'block';
+  addCProgress.addEventListener('input', function () {
+    const newHours =
+      Math.round((this.value / 100) * addCHours.value * 100) / 100;
+    addCCurrHours.value = newHours;
+  });
+  addCCurrHours.addEventListener('input', function () {
+    const newPercent =
+      Math.round((this.value / addCHours.value) * 100 * 100) / 100;
+    addCProgress.value = newPercent;
+  });
 });
-
 addCourseBtn.addEventListener('click', () => {
   const courseName = document.getElementById('addCourseName').value;
   const totalHours = Number(document.getElementById('addTotalHours').value);
   const currentProgress = Number(document.getElementById('addProgress').value);
-  if (currentProgress >= 0 && currentProgress <= 100) {
+  if (
+    currentProgress >= 0 &&
+    currentProgress <= 100 &&
+    courseName !== '' &&
+    totalHours > 0
+  ) {
     const newCourse = new CourseItem(courseName, totalHours, currentProgress);
-    console.log(state.courses, state.displayCourses);
-    renderCourses();
+    toggleCompleted();
     addCmodal.style.display = 'none';
     resetModalValues();
-  } else {
+    console.log(state.courses, state.displayCourses);
+  } else if (currentProgress < 0 || currentProgress > 100) {
     alert('Must enter a percentage from 0-100');
     document.getElementById('addProgress').value = '0';
+  } else if (courseName.trim() === '') {
+    alert('Must enter a course name');
+  } else {
+    alert('Must enter a value for total hours');
   }
 });
 
-//REMOVE COURSE
 function removeCourse(id) {
   state.courses = state.courses.filter((course) => course.id !== id);
   state.displayCourses = state.displayCourses.filter(
@@ -222,11 +258,73 @@ function removeCourse(id) {
   );
 }
 
+//EDIT COURSE
+function editCourse(id) {
+  editCmodal.style.display = 'block';
+  const courseName = document.getElementById('courseNameE');
+  const totalHours = document.getElementById('totalHoursE');
+  const currHours = document.getElementById('totalHoursC');
+  const currentProgress = document.getElementById('percentCompE');
+  state.courses.forEach((course) => {
+    if (id === course.id) {
+      courseName.value = course.name;
+      totalHours.value = course.totalHours;
+      currHours.value = course.completedHours();
+      currentProgress.value = course.progress;
+      editButton.addEventListener('click', () => {
+        const editedCourseName = courseName.value;
+        const editedTotalHours = Number(totalHours.value);
+        const editedCurrentProgress = Number(currentProgress.value);
+        if (
+          editedCurrentProgress >= 0 &&
+          editedCurrentProgress <= 100 &&
+          editedCourseName !== '' &&
+          editedTotalHours > 0
+        ) {
+          updateCourses(
+            course.id,
+            courseName.value,
+            totalHours.value,
+            currentProgress.value
+          );
+          editCmodal.style.display = 'none';
+        } else if (editedCurrentProgress < 0 || editedCurrentProgress > 100) {
+          alert('Must enter a percentage from 0-100');
+          currentProgress.value = '0';
+        } else if (editedCourseName.trim() === '') {
+          alert('Must enter a course name');
+        } else {
+          alert('Must enter a value for total hours');
+        }
+      });
+    }
+  });
+}
+
+function updateCourses(id, name, totalHours, progress) {
+  updateArray(state.courses, id, name, totalHours, progress);
+  updateArray(state.displayCourses, id, name, totalHours, progress);
+  toggleCompleted();
+}
+
+function updateArray(array, id, name, totalHours, progress) {
+  array.forEach((course) => {
+    if (id === course.id) {
+      course.name = name;
+      course.totalHours = totalHours;
+      course.progress = progress;
+    }
+  });
+  console.log(state.courses, state.displayCourses);
+}
+
 //CLOSE AND RESET MODALS
 closeModal.addEventListener('click', () => {
   addCmodal.style.display = 'none';
+  resetModalValues();
+});
+closeEdit.addEventListener('click', () => {
   editCmodal.style.display = 'none';
-  loginModal.style.display = 'none';
   resetModalValues();
 });
 
@@ -244,11 +342,12 @@ window.onclick = (event) => {
 };
 
 function resetModalValues() {
-  document.getElementById('addCourseName').value = '';
-  document.getElementById('addTotalHours').value = '';
-  document.getElementById('addProgress').value = '';
-  document.getElementById('courseNameE').value = '';
-  document.getElementById('totalHoursE').value = '';
-  document.getElementById('totalHoursC').value = '';
-  document.getElementById('percentCompE').value = '';
+  addCName.value = '';
+  addCHours.value = '';
+  addCCurrHours.value = '';
+  addCProgress.value = '';
+  editName.value = '';
+  editHours.value = '';
+  editCurHours.value = '';
+  editProgress.value = '';
 }

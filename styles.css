@@ -306,6 +306,7 @@ h1 {
 .reset-button:hover,
 .reset-button:active {
   background-color: #756ad8;
+  cursor: pointer;
 }
 .edit-button {
   background-color: var(--gold2-color);
@@ -315,6 +316,7 @@ h1 {
 .edit-button:hover,
 .edit-button:active {
   background-color: rgb(67, 143, 86);
+  cursor: pointer;
 }
 .ultra-cont {
   position: relative;
