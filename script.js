@@ -1,21 +1,5 @@
 ('use strict');
-{
-  /* <li class="completed-list" style="margin-top: 4rem">
-<span class="all-hours">0</span> hours out of
-<span class="total-hours">0</span> in total have been completed
-</li>
-<li class="completed-list">
-<span class="remaining-hours">0</span> hours remain
-</li>
-<li class="completed-list">
-<span class="completion-percent">0%</span> of the course has been
-completed
-</li>
-<li class="completed-list">
-<span class="remaining-percent">0%</span> of the course remains to be
-completed
-</li> */
-}
+
 import {
   getColor,
   bigColor,
@@ -50,10 +34,17 @@ const editButton = document.getElementById('editCourseBtn');
 const toggleBtn = document.getElementById('toggle-completed');
 //Login
 const loginModal = document.querySelector('.modal-login');
+//Upload
+const cloudIcon = document.querySelector('.cloud-icon');
 //X Button in modal windows
 const closeModal = document.querySelector('.close');
 const closeEdit = document.querySelector('.closeEdit');
 const closeLogin = document.querySelector('.closeLogin');
+//Starting Text
+const ultraCont = document.querySelector('.ultra-cont');
+const messageCont = document.querySelector('.message-cont');
+const addLink = document.querySelector('.addLink');
+const sampleLink = document.querySelector('.sampleLink');
 //Result Section
 const resCurHours = document.querySelector('.current-hours');
 const resTotHours = document.querySelector('.all-hours');
@@ -72,6 +63,8 @@ let state = {
   ascending: true,
   id: 0,
 };
+
+samplePrompt()
 completed();
 //COURSE CREATION/RENDERING
 function getID() {
@@ -107,7 +100,7 @@ class CourseItem extends Course {
 
   render() {
     this.progressColor = percentColor(this.progress);
-    this.colorR = getColor(this.remainingHours);
+    this.colorR = getColor(this.remainingHours());
     this.element = document.createElement('div');
     this.element.className = 'course-line';
     this.element.innerHTML = `
@@ -401,6 +394,45 @@ function resetModalValues() {
   editProgress.value = '';
 }
 
+//////A
+sampleLink.addEventListener('click', () => {
+  console.log('click')
+  const apiUrl = config.API_URL;
+  axios
+    .get(apiUrl)
+    .then((response) => {
+      const courses = response.data.courses;
+      // Create Course instances from each object in the array
+      console.log(courses);
+      courses.forEach(courses => new CourseItem(courses.name, courses.totalHours, courses.progress));
+      console.log(state.courses, state.displayCourses)
+      toggleCompleted()
+    })
+    .catch((error) => {
+      console.error('Error fetching courses:', error);
+    });
+
+  sampleClose();
+});
+cloudIcon.addEventListener('click', () => {
+  const userId = document.querySelector('.authdUser').textContent;
+  const apiURL = config.API_PUT_URL.replace('{id}', userId);
+  console.log(state.courses);
+  const courseString = JSON.stringify(state.courses);
+  axios
+    .put(apiURL, courseString)
+    .then((response) => console.log('Success:', response.data))
+    .catch((error) => console.error('Error:', error));
+});
+function samplePrompt() {
+  ultraCont.classList.add('sampler');
+  messageCont.style.display = 'flex';
+}
+function sampleClose() {
+  ultraCont.classList.remove('sampler');
+  messageCont.style.display = 'none';
+}
+
 //RESULT SECTION
 function completed() {
   let compPercent = 0,
@@ -417,18 +449,18 @@ function completed() {
 
   if (compTotHours !== 0) {
     compPercent = Math.round((compTotHours / allHours) * 10000) / 100;
-    compRemPercent = Math.round((100 - compPercent) * 100) / 100;
+    compRemPercent = 100 - compPercent;
   }
 
-  resCurHours.textContent = compTotHours;
+  resCurHours.textContent = compTotHours.toFixed(2);
   resTotHours.textContent = allHours.toFixed(2);
-  resRemHours.textContent = compRemHours;
-  resCompPerc.textContent = `${compPercent}`;
-  resRemPerc.textContent = `${compRemPercent}`;
+  resRemHours.textContent = compRemHours.toFixed(2);
+  resCompPerc.textContent = `${compPercent.toFixed(2)}`;
+  resRemPerc.textContent = `${compRemPercent.toFixed(2)}`;
 
   resCurHours.style.color = bigColor(allHours.toFixed(2));
   resTotHours.style.color = invertedBigColor(compTotHours);
-  resRemHours.style.color = bigColor(compRemHours);
-  resCompPerc.style.color = percentColor(compPercent);
-  resRemPerc.style.color = invertedPercentColor(compRemPercent);
+  resRemHours.style.color = bigColor(compRemHours.toFixed(2));
+  resCompPerc.style.color = percentColor(compPercent.toFixed(2));
+  resRemPerc.style.color = invertedPercentColor(compRemPercent.toFixed(2));
 }

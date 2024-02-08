@@ -95,6 +95,16 @@ ul {
 h1 {
   font-weight: 400;
 }
+h3 {
+  font-weight: 500;
+  margin-bottom: 3rem;
+  color: var(--primary-color);
+}
+h4 {
+  font-weight: 500;
+  margin-bottom: 3rem;
+  color: var(--text-color);
+}
 .color-wrapper {
   display: flex;
   align-items: center;
@@ -280,10 +290,12 @@ h1 {
 .course-details {
   display: flex;
   align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   gap: 0.3rem;
   font-size: 1rem;
   flex: 3;
-  flex-wrap: wrap;
 }
 .course-actions {
   display: flex;
@@ -435,16 +447,6 @@ h1 {
 .addCBtn:active,
 .editCBtn:active {
   background-color: var(--secondary-color);
-}
-h3 {
-  font-weight: 500;
-  margin-bottom: 3rem;
-  color: var(--primary-color);
-}
-h4 {
-  font-weight: 500;
-  margin-bottom: 3rem;
-  color: var(--text-color);
 }
 .sign-in {
   margin-top: 1rem;
