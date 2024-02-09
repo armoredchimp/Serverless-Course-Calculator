@@ -23,8 +23,8 @@ body {
   --primary-color: #daa520; /* Golden Rod */
   --background-color: #2e2e2e; /* Charcoal */
   --secondary-color: #8b4513; /* Saddle Brown */
-  --text-color: #ededed; /* Off White */
-  --white-color: #4b0082; /* Indigo */
+  --text-color: #dfdfdf; /* Off White */
+  --white-color: #f8ebeb; /* Indigo */
   --yellow-color: #f4a460; /* Sandy Brown */
   --maroon-color: #800000; /* Maroon */
   --red-color: #b22222; /* Firebrick */
@@ -508,4 +508,28 @@ h4 {
   font-size: 1.4rem;
   font-weight: bold;
   color: var(--text-color);
+}
+.column-chart {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  height: 15rem;
+  width: 50rem;
+  padding: 1rem;
+  position: relative;
+}
+
+.column {
+  width: 100%;
+  background-color: var(--teal-color);
+  text-align: center;
+  margin: 0 0.5rem;
+  transition: height 0.3s ease-in-out;
+  position: relative;
+}
+.column-label {
+  text-align: start;
+  position: absolute;
+  transform: translateY(-2rem);
+  font-size: 0.7rem;
 }

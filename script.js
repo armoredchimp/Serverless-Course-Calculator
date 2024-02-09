@@ -32,6 +32,7 @@ const editProgress = document.getElementById('percentCompE');
 const editButton = document.getElementById('editCourseBtn');
 //Toggle Completed
 const toggleBtn = document.getElementById('toggle-completed');
+const colorScheme = document.getElementById('colorScheme');
 //Login
 const loginModal = document.querySelector('.modal-login');
 //Upload
@@ -53,6 +54,7 @@ const resCompPerc = document.querySelector('.completion-percent');
 const resRemPerc = document.querySelector('.remaining-percent');
 const pieChart = document.getElementById('pieChart');
 const pieLabel = document.querySelector('.pie-label');
+const chartContainer = document.getElementById('columnChart');
 //
 //STATE OBJECT
 let state = {
@@ -61,6 +63,7 @@ let state = {
   hiddenCourses: [],
   currentEdit: null,
   showCompleted: true,
+  colors: 'dark',
   sortCriteria: 'percent',
   ascending: true,
   id: 0,
@@ -230,6 +233,16 @@ function toggleCompleted() {
   }
   renderCourses();
 }
+
+//COLOR SCHEME
+colorScheme.addEventListener('change', () => {
+  document.body.classList.remove('dark');
+  document.body.classList.remove('simple');
+  document.body.classList.remove('colorful');
+  let currentColorScheme = colorScheme.value;
+
+  document.body.classList.add(`${currentColorScheme}`);
+});
 
 //ADD AND REMOVE COURSES
 addNew.addEventListener('click', () => newCourse());
@@ -480,8 +493,10 @@ function completed() {
   resRemPerc.style.color = percentColor(compRemPercent);
 
   updatePie(compPercent, compRemPercent);
+  column(allHours);
 }
 
+//PIE CHART
 function updatePie(percentage, remPercent) {
   const degrees = (percentage / 100) * 360;
   const color = percentColor(percentage);
@@ -490,4 +505,50 @@ function updatePie(percentage, remPercent) {
   pieChart.style.setProperty('--color', color);
   pieChart.style.setProperty('--color2', remColor);
   pieLabel.textContent = `${percentage} %`;
+}
+
+//COLUMN CHART
+function column(allH) {
+  chartContainer.innerHTML = '';
+  if (state.courses.length >= 3) {
+    const total = allH;
+
+    const sortedCourses = [...state.courses].sort((a, b) => {
+      const percA = (a.completedHours() / total) * 100;
+      const percB = (b.completedHours() / total) * 100;
+      return percB - percA;
+    });
+
+    const numberOfCourses = sortedCourses.length;
+    const columnWidth = Math.max(100 / (2 * numberOfCourses), 5);
+
+    sortedCourses.forEach(course => {
+      const column = document.createElement('div');
+      const label = document.createElement('div');
+      const coursePerc = (course.completedHours() / total) * 100;
+      column.classList.add('column');
+      column.style.height = `${coursePerc}%`;
+      column.style.width = `${columnWidth}%`;
+      column.style.backgroundColor = `${invertedBigColor(coursePerc)}`;
+      label.classList.add('column-label');
+      label.textContent = abbreviatedName(course.name);
+
+      column.appendChild(label);
+      chartContainer.appendChild(column);
+    });
+  }
+}
+
+function abbreviatedName(name) {
+  const adjustedName = name
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('');
+  const capitalizedMatches = adjustedName.match(/[A-Z]/g) || [];
+
+  if (capitalizedMatches.length >= 2) {
+    return capitalizedMatches.slice(0, 3).join('');
+  } else {
+    return name.substring(0, 4);
+  }
 }
