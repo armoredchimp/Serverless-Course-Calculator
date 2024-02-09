@@ -48,7 +48,7 @@ function invertedBigColor(hours) {
 function percentColor(percent) {
   percent = Math.round(percent);
   return percent === 100
-    ? 'var(--text-color)'
+    ? 'var(--gold2-color)'
     : percent >= 80
     ? 'var(--primary-color)'
     : percent >= 60
@@ -62,27 +62,27 @@ function percentColor(percent) {
     : 'var(--red-color)';
 }
 
-function invertedPercentColor(percent) {
-  percent = Math.round(percent);
-  return percent < 1
-    ? 'var(--text-color)'
-    : percent <= 20
-    ? 'var(--primary-color)'
-    : percent <= 39
-    ? 'var(--teal-color)'
-    : percent <= 59
-    ? 'var(--yellow-color)'
-    : percent <= 79
-    ? 'var(--secondary-color)'
-    : percent <= 90
-    ? 'var(--maroon-color)'
-    : 'var(--red-color)';
-}
+// function invertedPercentColor(percent) {
+//   percent = Math.round(percent);
+//   return percent < 1
+//     ? 'var(--gold2-color)'
+//     : percent <= 20
+//     ? 'var(--primary-color)'
+//     : percent <= 39
+//     ? 'var(--teal-color)'
+//     : percent <= 59
+//     ? 'var(--yellow-color)'
+//     : percent <= 79
+//     ? 'var(--secondary-color)'
+//     : percent <= 90
+//     ? 'var(--maroon-color)'
+//     : 'var(--red-color)';
+// }
 
 export {
   getColor,
   bigColor,
   invertedBigColor,
   percentColor,
-  invertedPercentColor,
+  // invertedPercentColor,
 };

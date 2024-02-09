@@ -5,7 +5,7 @@ import {
   bigColor,
   invertedBigColor,
   percentColor,
-  invertedPercentColor,
+  // invertedPercentColor,
 } from './colors.js';
 //Selectors
 //Main Body for course list
@@ -51,8 +51,10 @@ const resTotHours = document.querySelector('.all-hours');
 const resRemHours = document.querySelector('.remaining-hours');
 const resCompPerc = document.querySelector('.completion-percent');
 const resRemPerc = document.querySelector('.remaining-percent');
+const pieChart = document.getElementById('pieChart');
+const pieLabel = document.querySelector('.pie-label');
 //
-//State Object
+//STATE OBJECT
 let state = {
   courses: [], // Array for all courses
   displayCourses: [],
@@ -64,8 +66,10 @@ let state = {
   id: 0,
 };
 
-samplePrompt()
+//STARTUP
+samplePrompt();
 completed();
+//
 //COURSE CREATION/RENDERING
 function getID() {
   const currentId = state.id + 1;
@@ -96,6 +100,7 @@ class Course {
 class CourseItem extends Course {
   constructor(name, totalHours, progress) {
     super(name, totalHours, progress);
+    sampleClose();
   }
 
   render() {
@@ -131,7 +136,7 @@ class CourseItem extends Course {
 function renderCourses() {
   courseUL.innerHTML = '';
 
-  state.displayCourses.forEach((course) => {
+  state.displayCourses.forEach(course => {
     course.render();
     const listItem = document.createElement('li');
     listItem.appendChild(course.element);
@@ -209,25 +214,29 @@ toggleBtn.addEventListener('click', () => {
 
 function toggleCompleted() {
   if (state.showCompleted) {
-    state.hiddenCourses.forEach((course) => {
+    state.hiddenCourses.forEach(course => {
       state.displayCourses.push(course);
     });
     state.hiddenCourses = [];
   } else {
-    state.displayCourses.forEach((course) => {
+    state.displayCourses.forEach(course => {
       if (course.progress === 100) {
         state.hiddenCourses.push(course);
       }
     });
     state.displayCourses = state.displayCourses.filter(
-      (course) => course.progress !== 100
+      course => course.progress !== 100
     );
   }
   renderCourses();
 }
 
-//ADD / REMOVE COURSES
-addNew.addEventListener('click', () => {
+//ADD AND REMOVE COURSES
+addNew.addEventListener('click', () => newCourse());
+
+addLink.addEventListener('click', () => newCourse());
+
+function newCourse() {
   addCmodal.style.display = 'block';
   addCProgress.addEventListener('input', function () {
     const newHours =
@@ -239,7 +248,7 @@ addNew.addEventListener('click', () => {
       Math.round((this.value / addTotalHours.value) * 100 * 100) / 100;
     addCProgress.value = newPercent;
   });
-});
+}
 
 addCourseBtn.addEventListener('click', () => {
   const courseName = document.getElementById('addCourseName').value;
@@ -267,13 +276,14 @@ addCourseBtn.addEventListener('click', () => {
 });
 
 function removeCourse(id) {
-  state.courses = state.courses.filter((course) => course.id !== id);
+  state.courses = state.courses.filter(course => course.id !== id);
   state.displayCourses = state.displayCourses.filter(
-    (course) => course.id !== id
+    course => course.id !== id
   );
-  state.hiddenCourses = state.hiddenCourses.filter(
-    (course) => course.id !== id
-  );
+  state.hiddenCourses = state.hiddenCourses.filter(course => course.id !== id);
+  if (state.courses.length === 0) {
+    samplePrompt();
+  }
   toggleCompleted();
 }
 
@@ -287,7 +297,7 @@ function reset(id) {
 
 function resetCourse(id, array) {
   state.currentEdit = id;
-  const course = array.find((course) => course.id === id);
+  const course = array.find(course => course.id === id);
   if (course) {
     course.progress = 0;
   }
@@ -296,7 +306,7 @@ function resetCourse(id, array) {
 //EDIT COURSE
 function editCourse(id) {
   state.currentEdit = id;
-  const course = state.courses.find((course) => course.id === id);
+  const course = state.courses.find(course => course.id === id);
   editName.value = course.name;
   editHours.value = course.totalHours;
   editCurHours.value = course.completedHours();
@@ -327,7 +337,7 @@ editButton.addEventListener('click', () => {
     editedCurProgress <= 100
   ) {
     [state.courses, state.displayCourses, state.hiddenCourses].forEach(
-      (array) => {
+      array => {
         updateArray(
           array,
           state.currentEdit,
@@ -352,7 +362,7 @@ editButton.addEventListener('click', () => {
 });
 
 function updateArray(array, id, name, totalHours, progress) {
-  const courseIndex = array.findIndex((course) => course.id === id);
+  const courseIndex = array.findIndex(course => course.id === id);
   if (courseIndex !== -1) {
     array[courseIndex].name = name;
     array[courseIndex].totalHours = totalHours;
@@ -370,7 +380,7 @@ closeEdit.addEventListener('click', () => {
   resetModalValues();
 });
 
-window.onclick = (event) => {
+window.onclick = event => {
   if (
     event.target === addCmodal ||
     event.target === editCmodal ||
@@ -394,26 +404,29 @@ function resetModalValues() {
   editProgress.value = '';
 }
 
-//////A
+//API CALLS
 sampleLink.addEventListener('click', () => {
-  console.log('click')
+  console.log('click');
   const apiUrl = config.API_URL;
   axios
     .get(apiUrl)
-    .then((response) => {
+    .then(response => {
       const courses = response.data.courses;
-      // Create Course instances from each object in the array
       console.log(courses);
-      courses.forEach(courses => new CourseItem(courses.name, courses.totalHours, courses.progress));
-      console.log(state.courses, state.displayCourses)
-      toggleCompleted()
+      courses.forEach(
+        courses =>
+          new CourseItem(courses.name, courses.totalHours, courses.progress)
+      );
+      console.log(state.courses, state.displayCourses);
+      toggleCompleted();
     })
-    .catch((error) => {
+    .catch(error => {
       console.error('Error fetching courses:', error);
     });
 
   sampleClose();
 });
+
 cloudIcon.addEventListener('click', () => {
   const userId = document.querySelector('.authdUser').textContent;
   const apiURL = config.API_PUT_URL.replace('{id}', userId);
@@ -421,15 +434,17 @@ cloudIcon.addEventListener('click', () => {
   const courseString = JSON.stringify(state.courses);
   axios
     .put(apiURL, courseString)
-    .then((response) => console.log('Success:', response.data))
-    .catch((error) => console.error('Error:', error));
+    .then(response => console.log('Success:', response.data))
+    .catch(error => console.error('Error:', error));
 });
 function samplePrompt() {
   ultraCont.classList.add('sampler');
+  pieChart.style.display = 'none';
   messageCont.style.display = 'flex';
 }
 function sampleClose() {
   ultraCont.classList.remove('sampler');
+  pieChart.style.display = 'flex';
   messageCont.style.display = 'none';
 }
 
@@ -441,7 +456,7 @@ function completed() {
     allHours = 0,
     compTotHours = 0;
 
-  state.courses.forEach((course) => {
+  state.courses.forEach(course => {
     compTotHours += course.completedHours();
     allHours += course.totalHours;
     compRemHours += course.remainingHours();
@@ -458,9 +473,21 @@ function completed() {
   resCompPerc.textContent = `${compPercent.toFixed(2)}`;
   resRemPerc.textContent = `${compRemPercent.toFixed(2)}`;
 
-  resCurHours.style.color = bigColor(allHours.toFixed(2));
+  resCurHours.style.color = bigColor(allHours);
   resTotHours.style.color = invertedBigColor(compTotHours);
-  resRemHours.style.color = bigColor(compRemHours.toFixed(2));
-  resCompPerc.style.color = percentColor(compPercent.toFixed(2));
-  resRemPerc.style.color = invertedPercentColor(compRemPercent.toFixed(2));
+  resRemHours.style.color = bigColor(compRemHours);
+  resCompPerc.style.color = percentColor(compPercent);
+  resRemPerc.style.color = percentColor(compRemPercent);
+
+  updatePie(compPercent, compRemPercent);
+}
+
+function updatePie(percentage, remPercent) {
+  const degrees = (percentage / 100) * 360;
+  const color = percentColor(percentage);
+  const remColor = percentColor(remPercent);
+  pieChart.style.setProperty('--percent', `${degrees}deg`);
+  pieChart.style.setProperty('--color', color);
+  pieChart.style.setProperty('--color2', remColor);
+  pieLabel.textContent = `${percentage} %`;
 }

@@ -11,48 +11,48 @@ body {
   --text-color: #ffffff;
   --white-color: black;
   --yellow-color: #e94560;
-  /* --blue-color: #3d1df1; */
   --maroon-color: #cf4e27;
   --red-color: #f51111;
-  --teal-color: #756ad8;
+  --teal-color: #067c6c;
   --highlight-color: rgba(127, 214, 192, 0.336);
   --gold-color: #2c74b3;
   --gold2-color: #756ad8;
   --minus-color: #ddd7d79f;
 }
 .colorful {
-  --primary-color: #0c7e2e;
-  --background-color: #eeeae5;
-  --secondary-color: #756ad8;
-  --text-color: black;
-  --white-color: #f8f1f1;
-  --yellow-color: #f0bc4e;
-  /* --blue-color: #3d1df1; */
-  --maroon-color: #c73509;
-  --red-color: #f51111;
-  --teal-color: #067c6c;
-  --highlight-color: rgba(159, 219, 159, 0.336);
-  --gold-color: #0c7e2e;
-  --gold2-color: #b47b00;
-  --hover-color: #ffffff;
-  --minus-color: #ddd7d79f;
+  --primary-color: #daa520; /* Golden Rod */
+  --background-color: #2e2e2e; /* Charcoal */
+  --secondary-color: #8b4513; /* Saddle Brown */
+  --text-color: #ededed; /* Off White */
+  --white-color: #4b0082; /* Indigo */
+  --yellow-color: #f4a460; /* Sandy Brown */
+  --maroon-color: #800000; /* Maroon */
+  --red-color: #b22222; /* Firebrick */
+  --teal-color: #2f4f4f; /* Dark Slate Grey */
+  --highlight-color: rgba(
+    205,
+    92,
+    92,
+    0.336
+  ); /* Light Coral with transparency */
+  --gold-color: #b8860b; /* Dark Golden Rod */
+  --gold2-color: #cd853f; /* Peru */
+  --minus-color: #c0c0c0a3; /* Silver with transparency */
 }
 
 .dark {
-  --primary-color: #2c74b3;
+  --primary-color: #3084ce;
   --background-color: #121212;
-  --secondary-color: #756ad8;
+  --secondary-color: #8074e9;
   --text-color: #ffffff;
   --white-color: black;
   --yellow-color: #e94560;
-  /* --blue-color: #3d1df1; */
-  --maroon-color: #c73509;
+  --maroon-color: #cf4e27;
   --red-color: #f51111;
-  --teal-color: #756ad8;
+  --teal-color: #067c6c;
   --highlight-color: rgba(127, 214, 192, 0.336);
   --gold-color: #2c74b3;
   --gold2-color: #756ad8;
-  --hover-color: #ffffff;
   --minus-color: #ddd7d79f;
 }
 .simple {
@@ -62,7 +62,6 @@ body {
   --text-color: black;
   --white-color: #f8f1f1;
   --yellow-color: #2c74b3;
-  /* --blue-color: #3d1df1; */
   --maroon-color: #213555;
   --red-color: #213555;
   --teal-color: #344b69;
@@ -487,4 +486,26 @@ h4 {
   color: var(--secondary-color);
 
   cursor: pointer;
+}
+.result {
+  display: flex;
+  gap: 10rem;
+}
+.pie-chart {
+  --percent: 0;
+  margin-top: 4rem;
+  width: 12rem;
+  height: 12rem;
+  border-radius: 50%;
+  background: conic-gradient(var(--color) var(--percent), var(--color2) 0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.pie-label {
+  position: absolute;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: var(--text-color);
 }
