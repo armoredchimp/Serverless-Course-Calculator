@@ -1,3 +1,5 @@
+0.7 2/9/24
+-- added alternate display mode
 0.6 2/8/24
 --project back to original state but now improved, with far more OOP and far less room for bugs (I'm sure I will find more). Began adding chart visualizations on the bottom section
 0.5 2/4/24

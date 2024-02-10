@@ -32,6 +32,7 @@ const editProgress = document.getElementById('percentCompE');
 const editButton = document.getElementById('editCourseBtn');
 //Toggle Completed
 const toggleBtn = document.getElementById('toggle-completed');
+const displayType = document.getElementById('displayType');
 const colorScheme = document.getElementById('colorScheme');
 //Login
 const loginModal = document.querySelector('.modal-login');
@@ -111,16 +112,20 @@ class CourseItem extends Course {
     this.colorR = getColor(this.remainingHours());
     this.element = document.createElement('div');
     this.element.className = 'course-line';
+    if (this.progress === 100) {
+      this.element.style.backgroundColor = 'var(--highlight-color)';
+      this.complete = true;
+    }
     this.element.innerHTML = `
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="minus-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
     <div class="course-details">
      <div class="detail-text"><div class="text1"> <span style="color: ${
-       this.progressColor
+       this.complete ? 'var(--text-color)' : this.progressColor
      };">${this.progress}%</span> of the ${this.totalHours}-hour ${
       this.name
     } course has been completed, which is roughly ${this.completedHours()} hours.</div><div class="text2"> <span style="color: ${
-      this.colorR
+      this.complete ? 'var(--text-color)' : this.colorR
     };">${this.remainingHours().toFixed(2)}</span> hours remain for this course.
     </div></div></div>
     <div class="course-actions">
@@ -139,14 +144,24 @@ class CourseItem extends Course {
     this.simpleCompleted = padStringFront(this.completedHours().toFixed(2));
     this.simpleRemaining = padStringFront(this.remainingHours().toFixed(2));
     this.element.className = 'course-line';
+    if (this.progress === 100) {
+      this.element.style.backgroundColor = 'var(--highlight-color)';
+      this.complete = true;
+    }
     this.element.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="minus-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
     <div class="course-details alternate">
     <div class="detail-simple">
     <div class="nameBox">${this.name}</div>
-    <div class="percBox"><span style="color: ${this.progressColor};">${this.simplePerc} %</span></div>
-    <div class="currBox"><span style="color: ${this.colorC};">${this.simpleCompleted}</span>&nbsp;&nbsp;&nbsp;hours completed</div>
-    <div class="remBox"><span style="color: ${this.colorR};">${this.simpleRemaining}</span>&nbsp;&nbsp;&nbsp;hours remaining</div>
+    <div class="percBox"><span style="color: ${
+      this.complete ? 'var(--text-color)' : this.progressColor
+    };">${this.simplePerc} %</span></div>
+    <div class="currBox"><span style="color: ${
+      this.complete ? 'var(--text-color)' : this.colorC
+    };">${this.simpleCompleted}</span>&nbsp;&nbsp;&nbsp;hours completed</div>
+    <div class="remBox"><span style="color: ${
+      this.complete ? 'var(--text-color)' : this.colorR
+    };">${this.simpleRemaining}</span>&nbsp;&nbsp;&nbsp;hours remaining</div>
     
     </div></div> <div class="course-actions">
     <button class="reset-button">Reset</button>
@@ -188,11 +203,21 @@ function padStringFront(value) {
   }
 }
 
+displayType.addEventListener('change', renderCourses);
+
 function renderCourses() {
   courseUL.innerHTML = '';
 
+  const selectedType = document.getElementById('displayType').value;
+  let renderMethod;
+  if (selectedType === 'basic-display') {
+    renderMethod = course => course.renderSimple();
+  } else if (selectedType === 'text-display') {
+    renderMethod = course => course.render();
+  }
+
   state.displayCourses.forEach(course => {
-    course.renderSimple();
+    renderMethod(course);
     const listItem = document.createElement('li');
     listItem.appendChild(course.element);
     const minusSelector = listItem.querySelector('.minus-icon');

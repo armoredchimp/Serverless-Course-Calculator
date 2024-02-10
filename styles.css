@@ -14,7 +14,7 @@ body {
   --maroon-color: #cf4e27;
   --red-color: #f51111;
   --teal-color: #067c6c;
-  --highlight-color: rgba(127, 214, 192, 0.336);
+  --highlight-color: rgba(108, 185, 165, 0.295);
   --gold-color: #2c74b3;
   --gold2-color: #756ad8;
   --minus-color: #ddd7d79f;
@@ -50,7 +50,7 @@ body {
   --maroon-color: #cf4e27;
   --red-color: #f51111;
   --teal-color: #067c6c;
-  --highlight-color: rgba(127, 214, 192, 0.336);
+  --highlight-color: rgba(108, 185, 165, 0.295);
   --gold-color: #2c74b3;
   --gold2-color: #756ad8;
   --minus-color: #ddd7d79f;
@@ -104,11 +104,14 @@ h4 {
   margin-bottom: 3rem;
   color: var(--text-color);
 }
+.display-wrapper,
 .color-wrapper {
+  margin-top: 0.5rem;
   display: flex;
   align-items: center;
   gap: 1rem;
 }
+
 .color-wrapper label {
 }
 .hidden-dropdown {
@@ -139,6 +142,10 @@ h4 {
   outline: none;
 }
 
+.display-wrapper:hover .hidden-dropdown {
+  opacity: 1;
+  pointer-events: auto;
+}
 .color-wrapper:hover .hidden-dropdown {
   opacity: 1;
   pointer-events: auto;

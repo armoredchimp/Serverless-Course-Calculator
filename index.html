@@ -19,7 +19,7 @@
   <body>
     <div class="title-cont">
       <div></div>
-      <h1>Course calculator version <span class="version-num">0.06</span></h1>
+      <h1>Course calculator version <span class="version-num">0.07</span></h1>
       <div class="sign-in">
         <button class="login">Login / Register</button>
         <div class="authd">
@@ -90,6 +90,13 @@
         <div class="toggle-complete-wrapper">
           <span>Show completed courses</span>
           <button id="toggle-completed" class="fas fa-toggle-on"></button>
+        </div>
+        <div class="display-wrapper">
+          <label for="displayType">Display Type</label>
+          <select id="displayType" class="hidden-dropdown">
+            <option value="basic-display">Basic</option>
+            <option value="text-display">Text</option>
+          </select>
         </div>
         <div class="color-wrapper">
           <label for="colorScheme">Color Scheme</label>
