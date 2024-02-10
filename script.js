@@ -115,19 +115,44 @@ class CourseItem extends Course {
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="minus-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
     <div class="course-details">
-      <span style="color: ${this.progressColor};">${
-      this.progress
-    }%</span> of the ${this.totalHours}-hour ${
+     <div class="detail-text"><div class="text1"> <span style="color: ${
+       this.progressColor
+     };">${this.progress}%</span> of the ${this.totalHours}-hour ${
       this.name
-    } course has been completed, which is roughly ${this.completedHours()} hours. <span style="color: ${
+    } course has been completed, which is roughly ${this.completedHours()} hours.</div><div class="text2"> <span style="color: ${
       this.colorR
     };">${this.remainingHours().toFixed(2)}</span> hours remain for this course.
-    </div>
+    </div></div></div>
     <div class="course-actions">
       <button class="reset-button">Reset</button>
       <button class="edit-button">Edit</button>
     </div>
   `;
+  }
+
+  renderSimple() {
+    this.progressColor = percentColor(this.progress);
+    this.colorR = getColor(this.remainingHours());
+    this.colorC = getColor(this.completedHours());
+    this.element = document.createElement('div');
+    this.simplePerc = padString(this.progress);
+    this.simpleCompleted = padStringFront(this.completedHours().toFixed(2));
+    this.simpleRemaining = padStringFront(this.remainingHours().toFixed(2));
+    this.element.className = 'course-line';
+    this.element.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="minus-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <div class="course-details alternate">
+    <div class="detail-simple">
+    <div class="nameBox">${this.name}</div>
+    <div class="percBox"><span style="color: ${this.progressColor};">${this.simplePerc} %</span></div>
+    <div class="currBox"><span style="color: ${this.colorC};">${this.simpleCompleted}</span>&nbsp;&nbsp;&nbsp;hours completed</div>
+    <div class="remBox"><span style="color: ${this.colorR};">${this.simpleRemaining}</span>&nbsp;&nbsp;&nbsp;hours remaining</div>
+    
+    </div></div> <div class="course-actions">
+    <button class="reset-button">Reset</button>
+    <button class="edit-button">Edit</button>
+  </div>
+    `;
   }
 
   delete() {
@@ -136,11 +161,38 @@ class CourseItem extends Course {
   }
 }
 
+function padString(value) {
+  let string = value.toString();
+  switch (string.length) {
+    case 1:
+      string = string + '&nbsp;&nbsp;';
+      return string;
+    case 2:
+      string = string + '&nbsp;';
+      return string;
+    default:
+      return string;
+  }
+}
+function padStringFront(value) {
+  let string = value.toString();
+  switch (string.length) {
+    case 3:
+      string = '00' + string;
+      return string;
+    case 4:
+      string = '0' + string;
+      return string;
+    default:
+      return string;
+  }
+}
+
 function renderCourses() {
   courseUL.innerHTML = '';
 
   state.displayCourses.forEach(course => {
-    course.render();
+    course.renderSimple();
     const listItem = document.createElement('li');
     listItem.appendChild(course.element);
     const minusSelector = listItem.querySelector('.minus-icon');

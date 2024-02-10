@@ -280,7 +280,7 @@ h4 {
 }
 .course-line {
   display: flex;
-  gap: 5rem;
+  gap: 10rem;
   border-radius: 15px;
   padding: 0.5rem;
   padding-left: 1rem;
@@ -288,24 +288,54 @@ h4 {
 }
 .course-details {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  gap: 0.3rem;
+  gap: 4.5rem;
   font-size: 1rem;
-  flex: 3;
+  flex: 1;
+}
+.alternate {
+  align-items: center;
+  gap: 3rem;
+  overflow: visible;
+  flex: 5;
+}
+
+.detail-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.detail-simple {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+  align-items: end;
+}
+.text2 {
+  margin-left: 1rem;
+}
+.nameBox {
+  width: 8rem;
+}
+.percBox {
+  margin-left: 3rem;
+}
+.currBox {
 }
 .course-actions {
   display: flex;
-  margin-right: 10rem;
+  margin-right: 15rem;
   gap: 2rem;
   justify-content: flex-end;
   flex: 1;
 }
 .reset-button,
 .edit-button {
-  padding: 0.5rem;
+  height: 3rem;
+  width: 3rem;
   border-radius: 3px;
   border: none;
   color: var(--white-color);
