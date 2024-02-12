@@ -56,6 +56,7 @@ const resRemPerc = document.querySelector('.remaining-percent');
 const pieChart = document.getElementById('pieChart');
 const pieLabel = document.querySelector('.pie-label');
 const chartContainer = document.getElementById('columnChart');
+const chartText = document.getElementById('chartText');
 //
 //STATE OBJECT
 let state = {
@@ -611,9 +612,32 @@ function column(allH) {
       label.textContent = abbreviatedName(course.name);
 
       column.appendChild(label);
+
+      column.addEventListener('mouseenter', () => displayInfo(course.id, allH));
+
       chartContainer.appendChild(column);
     });
+
+    chartContainer.appendChild(chartText);
   }
+}
+
+function displayInfo(id, total) {
+  const course = state.courses.find(course => course.id === id);
+  chartText.innerHTML = '';
+
+  const percNumber = ((course.completedHours() / total) * 100).toFixed(2);
+
+  const percentage = document.createElement('span');
+  percentage.textContent = `   (${percNumber}%)`;
+  percentage.style.color = percentColor(percNumber);
+
+  const hours = document.createElement('span');
+  hours.textContent = ` -  ${course.completedHours()} hours`;
+  hours.style.color = bigColor(course.completedHours());
+  chartText.textContent = `${course.name}`;
+  chartText.appendChild(hours);
+  chartText.appendChild(percentage);
 }
 
 function abbreviatedName(name) {
