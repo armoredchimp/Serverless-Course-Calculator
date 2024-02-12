@@ -65,6 +65,7 @@ let state = {
   hiddenCourses: [],
   currentEdit: null,
   showCompleted: true,
+  total: 0,
   colors: 'dark',
   sortCriteria: 'percent',
   ascending: true,
@@ -91,6 +92,7 @@ class Course {
 
     state.courses.push(this);
     state.displayCourses.push(this);
+    state.total += totalHours;
   }
 
   completedHours() {
@@ -99,6 +101,13 @@ class Course {
 
   remainingHours() {
     return Math.round((this.totalHours - this.completedHours()) * 100) / 100;
+  }
+
+  percent() {
+    return ((this.completedHours() / state.total) * 100).toFixed(2);
+  }
+  percentOfTotal() {
+    return ((this.totalHours / state.total) * 100).toFixed(2);
   }
 }
 
@@ -129,6 +138,7 @@ class CourseItem extends Course {
       this.complete ? 'var(--text-color)' : this.colorR
     };">${this.remainingHours().toFixed(2)}</span> hours remain for this course.
     </div></div></div>
+    <div class="course-percent-text">${this.percent()}% completed out of ${this.percentOfTotal()}% of the entire courseload</div>
     <div class="course-actions">
       <button class="reset-button">Reset</button>
       <button class="edit-button">Edit</button>
@@ -164,7 +174,9 @@ class CourseItem extends Course {
       this.complete ? 'var(--text-color)' : this.colorR
     };">${this.simpleRemaining}</span>&nbsp;&nbsp;&nbsp;hours remaining</div>
     
-    </div></div> <div class="course-actions">
+    </div></div>
+    <div class="course-percent">${this.percent()} / ${this.percentOfTotal()} %</div>
+    <div class="course-actions">
     <button class="reset-button">Reset</button>
     <button class="edit-button">Edit</button>
   </div>
@@ -173,7 +185,7 @@ class CourseItem extends Course {
 
   delete() {
     this.element.remove();
-    removeCourse(this.id);
+    removeCourse(this.id, this.totalHours);
   }
 }
 
@@ -366,7 +378,8 @@ addCourseBtn.addEventListener('click', () => {
   }
 });
 
-function removeCourse(id) {
+function removeCourse(id, hours) {
+  state.total -= hours;
   state.courses = state.courses.filter(course => course.id !== id);
   state.displayCourses = state.displayCourses.filter(
     course => course.id !== id
@@ -544,34 +557,32 @@ function completed() {
   let compPercent = 0,
     compRemPercent = 0,
     compRemHours = 0,
-    allHours = 0,
     compTotHours = 0;
 
   state.courses.forEach(course => {
     compTotHours += course.completedHours();
-    allHours += course.totalHours;
     compRemHours += course.remainingHours();
   });
 
   if (compTotHours !== 0) {
-    compPercent = Math.round((compTotHours / allHours) * 10000) / 100;
+    compPercent = Math.round((compTotHours / state.total) * 10000) / 100;
     compRemPercent = 100 - compPercent;
   }
 
   resCurHours.textContent = compTotHours.toFixed(2);
-  resTotHours.textContent = allHours.toFixed(2);
+  resTotHours.textContent = state.total.toFixed(2);
   resRemHours.textContent = compRemHours.toFixed(2);
   resCompPerc.textContent = `${compPercent.toFixed(2)}`;
   resRemPerc.textContent = `${compRemPercent.toFixed(2)}`;
 
-  resCurHours.style.color = bigColor(allHours);
+  resCurHours.style.color = bigColor(state.total);
   resTotHours.style.color = invertedBigColor(compTotHours);
   resRemHours.style.color = bigColor(compRemHours);
   resCompPerc.style.color = percentColor(compPercent);
   resRemPerc.style.color = percentColor(compRemPercent);
 
   updatePie(compPercent, compRemPercent);
-  column(allHours);
+  column(state.total);
 }
 
 //PIE CHART
@@ -613,24 +624,25 @@ function column(allH) {
 
       column.appendChild(label);
 
-      column.addEventListener('mouseenter', () => displayInfo(course.id, allH));
+      column.addEventListener('mouseenter', () => displayInfo(course.id));
 
       chartContainer.appendChild(column);
     });
 
     chartContainer.appendChild(chartText);
+    chartContainer.addEventListener('mouseleave', () => {
+      chartText.textContent = 'Hours Completed';
+    });
   }
 }
 
-function displayInfo(id, total) {
+function displayInfo(id) {
   const course = state.courses.find(course => course.id === id);
   chartText.innerHTML = '';
 
-  const percNumber = ((course.completedHours() / total) * 100).toFixed(2);
-
   const percentage = document.createElement('span');
-  percentage.textContent = `   (${percNumber}%)`;
-  percentage.style.color = percentColor(percNumber);
+  percentage.textContent = `   (${course.percent()}%)`;
+  percentage.style.color = percentColor(course.percent());
 
   const hours = document.createElement('span');
   hours.textContent = ` -  ${course.completedHours()} hours`;

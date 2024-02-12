@@ -303,6 +303,13 @@ h4 {
   font-size: 1rem;
   flex: 1;
 }
+.course-percent {
+  margin-left: -80rem;
+}
+.course-percent-text {
+  margin-left: -60rem;
+  padding-left: 55rem;
+}
 .alternate {
   align-items: center;
   gap: 3rem;
