@@ -582,15 +582,7 @@ h4 {
   transform: translateY(-2rem);
   font-size: 0.7rem;
 }
-/* chartText.textContent = 'Hours Completed';
-chartText.style.position = 'absolute';
-chartText.style.top = '20%';
-chartText.style.left = '10%';
-chartText.style.fontSize = '1.7rem';
-chartText.style.transform = 'translate(-50%,-50%)';
-chartText.style.opacity = '0.5';
-chartText.style.color = 'var(--primary-color)';
-chartText.style.zIndex = '-2'; */
+
 .chart-text {
   position: absolute;
   top: 30%;
