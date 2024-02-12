@@ -582,7 +582,7 @@ function completed() {
   resRemPerc.style.color = percentColor(compRemPercent);
 
   updatePie(compPercent, compRemPercent);
-  column(state.total);
+  column();
 }
 
 //PIE CHART
@@ -597,10 +597,10 @@ function updatePie(percentage, remPercent) {
 }
 
 //COLUMN CHART
-function column(allH) {
+function column() {
   chartContainer.innerHTML = '';
   if (state.courses.length >= 3) {
-    const total = allH;
+    const total = state.total;
 
     const sortedCourses = [...state.courses].sort((a, b) => {
       const percA = (a.completedHours() / total) * 100;
