@@ -1,4 +1,115 @@
-@media (max-width: 200em) {
+@media (max-width: 375px) {
+  body {
+    font-size: 0.8rem;
+  }
+  .title-cont {
+    padding-left: 0.6rem;
+    font-size: 0.6rem;
+  }
+  .h1 {
+    font-size: 0.2rem;
+  }
+  .sign-in {
+    margin-right: 2rem;
+    margin-left: 0rem;
+    transform: translateX(5rem);
+  }
+  .authd {
+    flex-direction: row;
+    gap: 0rem;
+  }
+  .cloud-icon {
+    margin-left: 0rem;
+    margin-top: 1rem;
+    transform: translateX(-4rem);
+  }
+  .top-cont {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 0rem;
+    margin-right: 0rem;
+    margin-bottom: 2rem;
+    margin-top: -2rem;
+    font-size: 1rem;
+    gap: 1.5rem;
+  }
+  .add-new {
+    transform: translateY(1rem);
+    transform: translateX(-0.5rem);
+    width: 15rem;
+    height: 3rem;
+  }
+  .sort-cont {
+    transform: translateX(-2.3rem);
+  }
+  .sortCriteria {
+    font-size: 0.6rem;
+  }
+  .toggle-complete-wrapper {
+    margin-top: 0.2rem;
+    transform: translateX(-0.6rem);
+    gap: 1rem;
+  }
+  .color-wrapper {
+    transform: translateX(-2.1rem);
+  }
+  .small {
+    display: none;
+  }
+  .hidden-dropdown {
+    opacity: 1;
+    font-size: 0.6rem;
+  }
+  .alternate {
+    align-items: center;
+    gap: 0.2rem;
+    overflow: visible;
+    flex: 1;
+  }
+  .course-line {
+    display: grid;
+    grid-gap: 1rem;
+    border-radius: 15px;
+    padding: 0.5rem;
+    padding-left: 0.2rem;
+    width: 100%;
+  }
+  .course-details {
+    font-size: 0.7rem;
+  }
+  .course-percent {
+    margin-left: 0rem;
+  }
+  .minus-icon {
+    width: 7%;
+    height: auto;
+  }
+  .nameBox {
+    width: 2.5rem;
+  }
+  .percBox {
+    margin-left: 2.2rem;
+    margin-right: 0.3rem;
+  }
+  .detail-simple {
+    gap: 0.2rem;
+  }
+  ul {
+    padding-inline-start: 0rem;
+  }
+  li {
+    margin-bottom: 0rem;
+  }
+  .course-actions {
+    display: flex;
+    margin-right: 1rem;
+    gap: 0.2rem;
+    justify-content: flex-end;
+    flex: 1;
+  }
+}
+/* @media (max-width: 1279px) {
   .course-line {
     gap: 0;
   }
@@ -51,56 +162,4 @@
   .column-label {
     font-size: 0.5rem;
   }
-}
-
-@media (min-width: 375px) {
-  body {
-    font-size: 0.8rem;
-  }
-  .title-cont {
-    padding-left: 0.6rem;
-    font-size: 0.6rem;
-  }
-  .h1 {
-    font-size: 0.2rem;
-  }
-  .sign-in {
-    margin-right: 2rem;
-    margin-left: 3rem;
-  }
-  .authd {
-    flex-direction: row;
-    gap: 0rem;
-  }
-  .cloud-icon {
-    margin-left: 0rem;
-    transform: translateX(2rem);
-  }
-  .top-cont {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 0.2rem;
-    align-items: center;
-    margin-left: -1rem;
-    margin-right: 0rem;
-    margin-bottom: 2rem;
-    font-size: 0.6rem;
-    position: relative;
-  }
-  .add-new {
-    margin-left: 15rem;
-    transform: translateY(4rem);
-    width: 5rem;
-    height: 3rem;
-  }
-  .sortCriteria {
-    font-size: 0.6rem;
-  }
-  .toggle-complete-wrapper {
-    margin-top: 0.2rem;
-    transform: translateX(-5rem);
-  }
-  .color-wrapper {
-    transform: translateX(-5rem);
-  }
-}
+} */

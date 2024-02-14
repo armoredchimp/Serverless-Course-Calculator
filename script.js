@@ -166,7 +166,7 @@ class CourseItem extends Course {
     <div class="nameBox">${this.name}</div>
     <div class="percBox"><span style="color: ${
       this.complete ? 'var(--text-color)' : this.progressColor
-    };">${this.simplePerc} %</span></div>
+    };">${this.simplePerc}%</span></div>
     <div class="currBox"><span style="color: ${
       this.complete ? 'var(--text-color)' : this.colorC
     };">${this.simpleCompleted}</span>&nbsp;&nbsp;&nbsp;hours completed</div>
