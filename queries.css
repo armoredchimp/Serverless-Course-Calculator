@@ -2,6 +2,7 @@
   .course-line {
     gap: 0;
   }
+
   .course-actions {
     margin-right: 10rem;
   }
@@ -49,5 +50,57 @@
   }
   .column-label {
     font-size: 0.5rem;
+  }
+}
+
+@media (min-width: 375px) {
+  body {
+    font-size: 0.8rem;
+  }
+  .title-cont {
+    padding-left: 0.6rem;
+    font-size: 0.6rem;
+  }
+  .h1 {
+    font-size: 0.2rem;
+  }
+  .sign-in {
+    margin-right: 2rem;
+    margin-left: 3rem;
+  }
+  .authd {
+    flex-direction: row;
+    gap: 0rem;
+  }
+  .cloud-icon {
+    margin-left: 0rem;
+    transform: translateX(2rem);
+  }
+  .top-cont {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 0.2rem;
+    align-items: center;
+    margin-left: -1rem;
+    margin-right: 0rem;
+    margin-bottom: 2rem;
+    font-size: 0.6rem;
+    position: relative;
+  }
+  .add-new {
+    margin-left: 15rem;
+    transform: translateY(4rem);
+    width: 5rem;
+    height: 3rem;
+  }
+  .sortCriteria {
+    font-size: 0.6rem;
+  }
+  .toggle-complete-wrapper {
+    margin-top: 0.2rem;
+    transform: translateX(-5rem);
+  }
+  .color-wrapper {
+    transform: translateX(-5rem);
   }
 }
