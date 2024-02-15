@@ -38,3 +38,20 @@
 .course-percent {
   margin-left: 0rem;
 }
+.modal-content,
+.edit-modal-content,
+.modal-login-content {
+  box-sizing: border-box;
+  background-color: var(--background-color);
+  margin: 10% auto;
+  transform: translateX(-4.4rem);
+  padding: 1rem;
+  border: 1px solid #888;
+  width: 74%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+.small-modal {
+  margin: 0 auto;
+  transform: translateX(0rem);
+  width: 49%;
+}

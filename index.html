@@ -109,6 +109,7 @@
           </select>
         </div>
         <button class="add-new">Add Course</button>
+        <button class="jump-down">View Results</button>
       </div>
       <div class="message-cont">
         <h4>No courses loaded</h4>
@@ -122,7 +123,7 @@
     <ul class="courses"></ul>
     <div class="result">
       <ul>
-        <li class="completed-list" style="margin-top: 4rem">
+        <li class="completed-list first-result" style="margin-top: 4rem">
           <span class="current-hours">0</span> hours out of
           <span class="all-hours">0</span> in total have been completed
         </li>
@@ -147,19 +148,21 @@
         <span id="chartText" class="chart-text">Hours Completed</span>
       </div>
     </div>
-    <div class="addC-modal">
-      <div class="modal-content">
-        <span class="close closeAdd">&times;</span>
-        <h3>Add a New Course</h3>
-        <label for="addCourseName">Course Name:</label>
-        <input type="text" id="addCourseName" />
-        <label for="addTotalHours">Total Course Length (in hours):</label>
-        <input type="number" id="addTotalHours" />
-        <label for="addCurrHours">Hours Completed:</label>
-        <input type="number" id="addCurrHours" />
-        <label for="addProgress">Percent Completed:</label>
-        <input type="number" id="addProgress" />
-        <button class="addCBtn" id="addCourseBtn">Add Course</button>
+    <div class="modal-cont">
+      <div class="addC-modal">
+        <div class="modal-content">
+          <span class="close closeAdd">&times;</span>
+          <h3>Add a New Course</h3>
+          <label for="addCourseName">Course Name:</label>
+          <input type="text" id="addCourseName" />
+          <label for="addTotalHours">Total Course Length (in hours):</label>
+          <input type="number" id="addTotalHours" />
+          <label for="addCurrHours">Hours Completed:</label>
+          <input type="number" id="addCurrHours" />
+          <label for="addProgress">Percent Completed:</label>
+          <input type="number" id="addProgress" />
+          <button class="addCBtn" id="addCourseBtn">Add Course</button>
+        </div>
       </div>
     </div>
     <div class="modal-login">

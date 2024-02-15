@@ -8,7 +8,9 @@ import {
   // invertedPercentColor,
 } from './colors.js';
 //Selectors
-//Main Body for course list
+const smallMode = window.matchMedia('(max-width: 375px)');
+const topCont = document.querySelector('.top-cont');
+//Main Body for course lis
 const courseUL = document.querySelector('.courses');
 //Add Course Selectors
 const addNew = document.querySelector('.add-new');
@@ -160,7 +162,7 @@ class CourseItem extends Course {
       this.complete = true;
     }
     this.element.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="minus-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
+    </svg><div class="name-small">${slightAbbrev(this.name)}</div>
     <div class="course-details alternate">
     <div class="detail-simple">
     <div class="nameBox">${this.name}</div>
@@ -176,6 +178,7 @@ class CourseItem extends Course {
     
     </div></div>
     <div class="course-percent">${this.percent()} / ${this.percentOfTotal()} %</div>
+    <div class="course-percent-small">${this.percent()}% out of ${this.percentOfTotal()}% of total</div>
     <div class="course-actions">
     <button class="reset-button">Reset</button>
     <button class="edit-button">Edit</button>
@@ -186,6 +189,14 @@ class CourseItem extends Course {
   delete() {
     this.element.remove();
     removeCourse(this.id, this.totalHours);
+  }
+}
+
+function slightAbbrev(name) {
+  if (name.length > 19) {
+    return name.substring(0, 19) + '...';
+  } else {
+    return name;
   }
 }
 
@@ -338,6 +349,14 @@ colorScheme.addEventListener('change', () => {
 addNew.addEventListener('click', () => newCourse());
 
 addLink.addEventListener('click', () => newCourse());
+
+function handleMediaQuery(e) {
+  if (e.matches) {
+    addCmodal.classList.add('small-modal');
+  } else {
+    addCmodal.classList.remove('small-modal');
+  }
+}
 
 function newCourse() {
   addCmodal.style.display = 'block';
@@ -541,15 +560,22 @@ cloudIcon.addEventListener('click', () => {
     .then(response => console.log('Success:', response.data))
     .catch(error => console.error('Error:', error));
 });
+
 function samplePrompt() {
   ultraCont.classList.add('sampler');
   pieChart.style.display = 'none';
   messageCont.style.display = 'flex';
+
+  topCont.style.marginBottom = '0rem';
+  smallMode.removeEventListener('change', handleMediaQuery);
+  addCmodal.classList.remove('small-modal');
 }
 function sampleClose() {
   ultraCont.classList.remove('sampler');
   pieChart.style.display = 'flex';
   messageCont.style.display = 'none';
+  smallMode.addEventListener('change', handleMediaQuery);
+  handleMediaQuery(smallMode);
 }
 
 //RESULT SECTION

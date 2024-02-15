@@ -254,6 +254,12 @@ h4 {
 .version-num {
   color: var(--secondary-color);
 }
+.name-small {
+  display: none;
+}
+.course-percent-small {
+  display: none;
+}
 .minus-icon {
   width: 2%;
   cursor: pointer;
@@ -441,6 +447,9 @@ h4 {
   gap: 2rem;
   margin-top: 3rem;
 }
+.modal-cont {
+  display: none;
+}
 .modal-content label,
 .modal-content input {
   display: block;
@@ -451,6 +460,8 @@ h4 {
   width: 100%;
   max-width: 200px;
   box-sizing: border-box;
+}
+.small-modal {
 }
 .edit-modal-content label,
 .edit-modal-content input {
@@ -592,4 +603,8 @@ h4 {
   opacity: 0.5;
   color: var(--primary-color);
   z-index: -2;
+}
+
+.jump-down {
+  display: none;
 }

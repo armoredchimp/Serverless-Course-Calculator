@@ -29,7 +29,7 @@
     align-items: center;
     margin-left: 0rem;
     margin-right: 0rem;
-    margin-bottom: 2rem;
+    margin-bottom: -4rem;
     margin-top: -2rem;
     font-size: 1rem;
     gap: 1.5rem;
@@ -39,6 +39,14 @@
     transform: translateX(-0.5rem);
     width: 15rem;
     height: 3rem;
+  }
+  .jump-down {
+    display: block;
+    background-color: var(--secondary-color);
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem;
+    width: 5rem;
   }
   .sort-cont {
     transform: translateX(-2.3rem);
@@ -61,6 +69,12 @@
     opacity: 1;
     font-size: 0.6rem;
   }
+  .message-cont {
+    font-size: 1.2rem;
+  }
+  .sampleLink {
+    font-size: 1rem;
+  }
   .alternate {
     align-items: center;
     gap: 0.2rem;
@@ -69,44 +83,131 @@
   }
   .course-line {
     display: grid;
-    grid-gap: 1rem;
-    border-radius: 15px;
+    background-color: #222020;
+    gap: 1rem;
+    border-radius: 2px;
     padding: 0.5rem;
-    padding-left: 0.2rem;
-    width: 100%;
+    transform: translateX(0.1rem);
+    padding-top: 1.2rem;
+    padding-left: 0.4rem;
+    width: 95%;
+    margin-bottom: 1rem;
   }
   .course-details {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
   }
   .course-percent {
     margin-left: 0rem;
   }
   .minus-icon {
-    width: 7%;
+    width: 9%;
     height: auto;
   }
   .nameBox {
-    width: 2.5rem;
+    display: none;
+  }
+  .name-small {
+    display: flex;
+    font-size: 1.5rem;
+    transform: translateX(6rem);
+    margin-top: -3rem;
   }
   .percBox {
-    margin-left: 2.2rem;
-    margin-right: 0.3rem;
+    margin-left: 0.2rem;
+    margin-right: 1.2rem;
   }
   .detail-simple {
     gap: 0.2rem;
   }
+  .currBox {
+    margin-right: 0.4rem;
+  }
   ul {
     padding-inline-start: 0rem;
   }
-  li {
+  .courses li {
     margin-bottom: 0rem;
+  }
+  .course-percent {
+    display: none;
+  }
+  .course-percent-small {
+    display: flex;
+    transform: translateY(2rem);
+    margin-left: 0.5rem;
+    font-size: 1rem;
   }
   .course-actions {
     display: flex;
     margin-right: 1rem;
-    gap: 0.2rem;
+    gap: 1rem;
     justify-content: flex-end;
     flex: 1;
+    transform: translateY(-1rem);
+  }
+  .modal-cont {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .small-modal {
+    margin: 0 auto;
+    transform: translateX(-1.5rem);
+    width: 100%;
+  }
+
+  .modal-content,
+  .edit-modal-content,
+  .modal-login-content {
+    box-sizing: border-box;
+    background-color: var(--background-color);
+    margin: 10% auto;
+    transform: translateX(-1rem);
+    padding: 1rem;
+    border: 1px solid #888;
+    width: 74%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  }
+  .addCBtn {
+    width: 11.5rem;
+  }
+  .result {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .pie-chart {
+    transform: translateX(5.5rem);
+    margin-top: 1rem;
+  }
+  .column-chart {
+    flex-direction: column;
+    height: 50rem;
+    width: 20rem;
+  }
+  .column {
+    width: auto;
+    height: 100%;
+    background-color: var(--teal-color);
+    text-align: center;
+    margin: 0.5rem 0;
+    transition: width 0.3s ease-in-out;
+  }
+  .chart-text {
+    display: none;
+  }
+  .completed-list {
+    margin-left: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    gap: 0.4rem;
+  }
+  .first-result {
+    display: block;
+    line-height: 1.2rem;
   }
 }
 /* @media (max-width: 1279px) {
