@@ -208,7 +208,7 @@ class Column {
     }
   }
   render() {
-    chartContainer.innerHTML = '';
+    chartText.textContent = 'Hours Completed';
     smallMode.matches
       ? this.columnHoriz(this.sortedCourses, this.thickness)
       : this.columnVert(this.sortedCourses, this.thickness);
@@ -252,7 +252,18 @@ class Column {
 
       column.appendChild(label);
       column.addEventListener('mouseenter', () => displayInfo(course.id));
-
+      column.addEventListener(
+        'mouseenter',
+        () => (column.style.backgroundColor = bigColor(coursePerc))
+      );
+      column.addEventListener(
+        'mouseleave',
+        () => (column.style.backgroundColor = invertedBigColor(coursePerc))
+      );
+      chartContainer.addEventListener(
+        'mouseleave',
+        () => (chartText.textContent = 'Hours Completed')
+      );
       chartContainer.appendChild(column);
     });
   }
@@ -674,7 +685,9 @@ function completed() {
   resRemPerc.style.color = percentColor(compRemPercent);
 
   updatePie(compPercent, compRemPercent);
-  const columnCreate = new Column(state);
+  if (state.courses.length >= 3) {
+    const columnCreate = new Column(state);
+  }
 }
 
 //PIE CHART

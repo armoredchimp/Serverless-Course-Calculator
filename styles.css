@@ -592,6 +592,7 @@ h4 {
 .column:hover {
   size: 105%;
   color: var(--secondary-color);
+  background-color: var(--secondary-color);
   cursor: pointer;
 }
 .column-label {

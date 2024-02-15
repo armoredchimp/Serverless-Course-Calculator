@@ -199,7 +199,8 @@
     transition: width 0.3s ease-in-out;
   }
   .chart-text {
-    display: none;
+    transform: translate(4rem, -16rem);
+    font-size: 0.8rem;
   }
   .completed-list {
     margin-left: 0.5rem;
