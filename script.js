@@ -75,8 +75,7 @@ let state = {
 };
 
 //STARTUP
-samplePrompt();
-completed();
+
 //
 //COURSE CREATION/RENDERING
 function getID() {
@@ -108,10 +107,11 @@ class Course {
   percent() {
     return ((this.completedHours() / state.total) * 100).toFixed(2);
   }
+
   percentOfTotal() {
     return ((this.totalHours / state.total) * 100).toFixed(2);
   }
-}
+} // Correctly closed Course class
 
 class CourseItem extends Course {
   constructor(name, totalHours, progress) {
@@ -189,6 +189,72 @@ class CourseItem extends Course {
   delete() {
     this.element.remove();
     removeCourse(this.id, this.totalHours);
+  }
+}
+
+class Column {
+  constructor(state) {
+    if (state.courses.length >= 3) {
+      this.total = state.total;
+      this.sortedCourses = [...state.courses].sort((a, b) => {
+        const percA = (a.completedHours() / this.total) * 100;
+        const percB = (b.completedHours() / this.total) * 100;
+        return percB - percA;
+      });
+
+      this.numberOfCourses = this.sortedCourses.length;
+      this.thickness = Math.max(100 / (2 * this.numberOfCourses), 5);
+      this.render();
+    }
+  }
+  render() {
+    chartContainer.innerHTML = '';
+    smallMode.matches
+      ? this.columnHoriz(this.sortedCourses, this.thickness)
+      : this.columnVert(this.sortedCourses, this.thickness);
+  }
+
+  columnHoriz(courses, thickness) {
+    console.log('horz');
+    chartContainer.classList.remove('column-chart');
+    chartContainer.classList.add('column-chartH');
+    courses.forEach(course => {
+      const bar = document.createElement('div');
+      const label = document.createElement('div');
+      const coursePerc = (course.completedHours() / this.total) * 100;
+      bar.classList.add('column');
+      bar.style.width = `${coursePerc}%`;
+      bar.style.height = `${thickness}%`;
+      bar.style.backgroundColor = invertedBigColor(coursePerc);
+      label.classList.add('column-labelH');
+      label.textContent = course.name;
+
+      bar.appendChild(label);
+      bar.addEventListener('mouseenter', () => displayInfo(course.id));
+      chartContainer.appendChild(bar);
+    });
+  }
+
+  columnVert(courses, thickness) {
+    console.log('vert');
+    chartContainer.classList.remove('column-chartH');
+    chartContainer.classList.add('column-chart');
+    courses.forEach(course => {
+      const column = document.createElement('div');
+      const label = document.createElement('div');
+      const coursePerc = (course.completedHours() / this.total) * 100;
+      column.classList.add('column');
+      column.style.height = `${coursePerc}%`;
+      column.style.width = `${thickness}%`;
+      column.style.backgroundColor = invertedBigColor(coursePerc);
+      label.classList.add('column-label');
+      label.textContent = abbreviatedName(course.name);
+
+      column.appendChild(label);
+      column.addEventListener('mouseenter', () => displayInfo(course.id));
+
+      chartContainer.appendChild(column);
+    });
   }
 }
 
@@ -608,7 +674,7 @@ function completed() {
   resRemPerc.style.color = percentColor(compRemPercent);
 
   updatePie(compPercent, compRemPercent);
-  column();
+  const columnCreate = new Column(state);
 }
 
 //PIE CHART
@@ -621,46 +687,9 @@ function updatePie(percentage, remPercent) {
   pieChart.style.setProperty('--color2', remColor);
   pieLabel.textContent = `${percentage} %`;
 }
-
+samplePrompt();
+completed();
 //COLUMN CHART
-function column() {
-  chartContainer.innerHTML = '';
-  if (state.courses.length >= 3) {
-    const total = state.total;
-
-    const sortedCourses = [...state.courses].sort((a, b) => {
-      const percA = (a.completedHours() / total) * 100;
-      const percB = (b.completedHours() / total) * 100;
-      return percB - percA;
-    });
-
-    const numberOfCourses = sortedCourses.length;
-    const columnWidth = Math.max(100 / (2 * numberOfCourses), 5);
-
-    sortedCourses.forEach(course => {
-      const column = document.createElement('div');
-      const label = document.createElement('div');
-      const coursePerc = (course.completedHours() / total) * 100;
-      column.classList.add('column');
-      column.style.height = `${coursePerc}%`;
-      column.style.width = `${columnWidth}%`;
-      column.style.backgroundColor = `${invertedBigColor(coursePerc)}`;
-      label.classList.add('column-label');
-      label.textContent = abbreviatedName(course.name);
-
-      column.appendChild(label);
-
-      column.addEventListener('mouseenter', () => displayInfo(course.id));
-
-      chartContainer.appendChild(column);
-    });
-
-    chartContainer.appendChild(chartText);
-    chartContainer.addEventListener('mouseleave', () => {
-      chartText.textContent = 'Hours Completed';
-    });
-  }
-}
 
 function displayInfo(id) {
   const course = state.courses.find(course => course.id === id);

@@ -564,16 +564,23 @@ h4 {
   font-weight: bold;
   color: var(--text-color);
 }
-.column-chart {
+.column-chart,
+.column-chartH {
   display: flex;
   justify-content: space-around;
-  align-items: flex-end;
   height: 15rem;
   width: 50rem;
   padding: 1rem;
   position: relative;
 }
 
+.column-chart {
+  align-items: flex-end;
+}
+
+.column-chartH {
+  align-items: flex-start;
+}
 .column {
   width: 100%;
   background-color: var(--teal-color);
@@ -593,7 +600,12 @@ h4 {
   transform: translateY(-2rem);
   font-size: 0.7rem;
 }
-
+.column-labelH {
+  text-align: start;
+  position: absolute;
+  transform: translateX(4rem);
+  font-size: 0.7rem;
+}
 .chart-text {
   position: absolute;
   top: 30%;

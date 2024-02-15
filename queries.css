@@ -43,10 +43,12 @@
   .jump-down {
     display: block;
     background-color: var(--secondary-color);
+    transform: translateX(-0.5rem);
     border: none;
-    border-radius: 5px;
+    border-radius: 3px;
     padding: 0.5rem;
-    width: 5rem;
+    width: 15rem;
+    height: 3rem;
   }
   .sort-cont {
     transform: translateX(-2.3rem);
@@ -135,7 +137,7 @@
     display: flex;
     transform: translateY(2rem);
     margin-left: 0.5rem;
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
   .course-actions {
     display: flex;
@@ -183,15 +185,15 @@
     transform: translateX(5.5rem);
     margin-top: 1rem;
   }
-  .column-chart {
+  .column-chart,
+  .column-chartH {
     flex-direction: column;
     height: 50rem;
     width: 20rem;
   }
+
   .column {
     width: auto;
-    height: 100%;
-    background-color: var(--teal-color);
     text-align: center;
     margin: 0.5rem 0;
     transition: width 0.3s ease-in-out;
