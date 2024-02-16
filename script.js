@@ -5,8 +5,15 @@ import {
   bigColor,
   invertedBigColor,
   percentColor,
-  // invertedPercentColor,
 } from './colors.js';
+import {
+  slightAbbrev,
+  padString,
+  padStringFront,
+  abbreviatedName,
+  updateArray,
+} from './utilities.js';
+
 //Selectors
 const smallMode = window.matchMedia('(max-width: 375px)');
 const topCont = document.querySelector('.top-cont');
@@ -75,8 +82,6 @@ let state = {
   id: 0,
 };
 
-//STARTUP
-
 //
 //COURSE CREATION/RENDERING
 function getID() {
@@ -112,7 +117,7 @@ class Course {
   percentOfTotal() {
     return ((this.totalHours / state.total) * 100).toFixed(2);
   }
-} // Correctly closed Course class
+}
 
 class CourseItem extends Course {
   constructor(name, totalHours, progress) {
@@ -273,43 +278,6 @@ class Column {
   }
 }
 
-function slightAbbrev(name) {
-  if (name.length > 19) {
-    return name.substring(0, 19) + '...';
-  } else {
-    return name;
-  }
-}
-
-function padString(value) {
-  let string = value.toString();
-  switch (string.length) {
-    case 1:
-      string = string + '&nbsp;&nbsp;';
-      return string;
-    case 2:
-      string = string + '&nbsp;';
-      return string;
-    default:
-      return string;
-  }
-}
-function padStringFront(value) {
-  let string = value.toString();
-  switch (string.length) {
-    case 3:
-      string = '00' + string;
-      return string;
-    case 4:
-      string = '0' + string;
-      return string;
-    default:
-      return string;
-  }
-}
-
-displayType.addEventListener('change', renderCourses);
-
 function renderCourses() {
   courseUL.innerHTML = '';
 
@@ -342,6 +310,8 @@ function renderCourses() {
   });
   completed();
 }
+
+displayType.addEventListener('change', renderCourses);
 
 //SORTING
 sortIcon.addEventListener('click', () => {
@@ -574,15 +544,6 @@ editButton.addEventListener('click', () => {
   }
 });
 
-function updateArray(array, id, name, totalHours, progress) {
-  const courseIndex = array.findIndex(course => course.id === id);
-  if (courseIndex !== -1) {
-    array[courseIndex].name = name;
-    array[courseIndex].totalHours = totalHours;
-    array[courseIndex].progress = progress;
-  }
-}
-
 //CLOSE AND RESET MODALS
 closeModal.addEventListener('click', () => {
   addCmodal.style.display = 'none';
@@ -651,6 +612,7 @@ cloudIcon.addEventListener('click', () => {
     .catch(error => console.error('Error:', error));
 });
 
+//STARTUP DISPLAY
 function samplePrompt() {
   ultraCont.classList.add('sampler');
   pieChart.style.display = 'none';
@@ -702,8 +664,6 @@ function completed() {
     const columnCreate = new Column(state);
   }
 }
-
-//PIE CHART
 function updatePie(percentage, remPercent) {
   const degrees = (percentage / 100) * 360;
   const color = percentColor(percentage);
@@ -713,10 +673,6 @@ function updatePie(percentage, remPercent) {
   pieChart.style.setProperty('--color2', remColor);
   pieLabel.textContent = `${percentage} %`;
 }
-samplePrompt();
-completed();
-//COLUMN CHART
-
 function displayInfo(id) {
   const course = state.courses.find(course => course.id === id);
   const chartText = document.getElementById('chartText');
@@ -733,17 +689,5 @@ function displayInfo(id) {
   chartText.appendChild(hours);
   chartText.appendChild(percentage);
 }
-
-function abbreviatedName(name) {
-  const adjustedName = name
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join('');
-  const capitalizedMatches = adjustedName.match(/[A-Z]/g) || [];
-
-  if (capitalizedMatches.length >= 2) {
-    return capitalizedMatches.slice(0, 3).join('');
-  } else {
-    return name.substring(0, 4);
-  }
-}
+samplePrompt();
+completed();
