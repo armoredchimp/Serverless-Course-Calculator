@@ -10,7 +10,7 @@ import {
 //Selectors
 const smallMode = window.matchMedia('(max-width: 375px)');
 const topCont = document.querySelector('.top-cont');
-//Main Body for course lis
+//Main Body for course list
 const courseUL = document.querySelector('.courses');
 //Add Course Selectors
 const addNew = document.querySelector('.add-new');
@@ -20,6 +20,7 @@ const addCName = document.getElementById('addCourseName');
 const addTotalHours = document.getElementById('addTotalHours');
 const addCCurrHours = document.getElementById('addCurrHours');
 const addCProgress = document.getElementById('addProgress');
+const viewResults = document.querySelector('.jump-down');
 //Sorting Selectors
 const sortIcon = document.querySelector('.sort-icon');
 const sortCriteria = document.getElementById('sortCriteria');
@@ -58,7 +59,7 @@ const resRemPerc = document.querySelector('.remaining-percent');
 const pieChart = document.getElementById('pieChart');
 const pieLabel = document.querySelector('.pie-label');
 const chartContainer = document.getElementById('columnChart');
-const chartText = document.getElementById('chartText');
+
 //
 //STATE OBJECT
 let state = {
@@ -208,7 +209,9 @@ class Column {
     }
   }
   render() {
-    chartText.textContent = 'Hours Completed';
+    chartContainer.innerHTML =
+      '<span id="chartText" class="chart-text">Hours Completed</span>';
+
     smallMode.matches
       ? this.columnHoriz(this.sortedCourses, this.thickness)
       : this.columnVert(this.sortedCourses, this.thickness);
@@ -236,9 +239,10 @@ class Column {
   }
 
   columnVert(courses, thickness) {
-    console.log('vert');
+    const chartText = document.getElementById('chartText');
     chartContainer.classList.remove('column-chartH');
     chartContainer.classList.add('column-chart');
+
     courses.forEach(course => {
       const column = document.createElement('div');
       const label = document.createElement('div');
@@ -251,11 +255,11 @@ class Column {
       label.textContent = abbreviatedName(course.name);
 
       column.appendChild(label);
-      column.addEventListener('mouseenter', () => displayInfo(course.id));
-      column.addEventListener(
-        'mouseenter',
-        () => (column.style.backgroundColor = bigColor(coursePerc))
-      );
+      column.addEventListener('mouseenter', () => {
+        displayInfo(course.id);
+        column.style.backgroundColor = bigColor(coursePerc);
+      });
+
       column.addEventListener(
         'mouseleave',
         () => (column.style.backgroundColor = invertedBigColor(coursePerc))
@@ -427,12 +431,21 @@ addNew.addEventListener('click', () => newCourse());
 
 addLink.addEventListener('click', () => newCourse());
 
+viewResults.addEventListener('click', () => scrollDown());
+
 function handleMediaQuery(e) {
   if (e.matches) {
     addCmodal.classList.add('small-modal');
   } else {
     addCmodal.classList.remove('small-modal');
   }
+}
+
+function scrollDown() {
+  pieChart.scrollIntoView({
+    behavior: 'smooth',
+    block: 'center',
+  });
 }
 
 function newCourse() {
@@ -706,6 +719,7 @@ completed();
 
 function displayInfo(id) {
   const course = state.courses.find(course => course.id === id);
+  const chartText = document.getElementById('chartText');
   chartText.innerHTML = '';
 
   const percentage = document.createElement('span');

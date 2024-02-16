@@ -448,7 +448,7 @@ h4 {
   margin-top: 3rem;
 }
 .modal-cont {
-  display: none;
+  /* display: none; */
 }
 .modal-content label,
 .modal-content input {
