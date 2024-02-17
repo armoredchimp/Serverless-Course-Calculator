@@ -14,6 +14,11 @@ import {
   updateArray,
 } from './utilities.js';
 
+// import { Amplify } from 'aws-amplify';
+// import amplifyConfig from './amplify.js';
+// Amplify.configure(amplifyConfig);
+// const currentConfig = Amplify.getConfig();
+// console.log(currentConfig);
 //Selectors
 const smallMode = window.matchMedia('(max-width: 375px)');
 const topCont = document.querySelector('.top-cont');
@@ -45,6 +50,8 @@ const toggleBtn = document.getElementById('toggle-completed');
 const displayType = document.getElementById('displayType');
 const colorScheme = document.getElementById('colorScheme');
 //Login
+const loginBtn = document.querySelector('.login');
+const authd = document.querySelector('.authd');
 const loginModal = document.querySelector('.modal-login');
 //Upload
 const cloudIcon = document.querySelector('.cloud-icon');
@@ -80,8 +87,28 @@ let state = {
   sortCriteria: 'percent',
   ascending: true,
   id: 0,
+  verified: false,
 };
 
+function checkLogin() {
+  if (!state.verified) {
+    loginBtn.style.display = 'block';
+    cloudIcon.style.display = 'none';
+    authd.style.display = 'none';
+  } else {
+    loginBtn.style.display = 'none';
+    cloudIcon.style.display = 'flex';
+    authd.style.display = 'block';
+  }
+}
+
+loginBtn.addEventListener('click', () => loginScreen());
+
+function loginScreen() {
+  loginModal.style.display = 'block';
+}
+
+checkLogin();
 //
 //COURSE CREATION/RENDERING
 function getID() {
@@ -551,6 +578,10 @@ closeModal.addEventListener('click', () => {
 });
 closeEdit.addEventListener('click', () => {
   editCmodal.style.display = 'none';
+  resetModalValues();
+});
+closeLogin.addEventListener('click', () => {
+  loginModal.style.display = 'none';
   resetModalValues();
 });
 
