@@ -14,11 +14,11 @@ import {
   updateArray,
 } from './utilities.js';
 
-// import { Amplify } from 'aws-amplify';
-// import amplifyConfig from './amplify.js';
-// Amplify.configure(amplifyConfig);
-// const currentConfig = Amplify.getConfig();
-// console.log(currentConfig);
+import { Amplify } from 'aws-amplify';
+import amplifyConfig from './amplify.js';
+Amplify.configure(amplifyConfig);
+const currentConfig = Amplify.getConfig();
+console.log(currentConfig);
 //Selectors
 const smallMode = window.matchMedia('(max-width: 375px)');
 const topCont = document.querySelector('.top-cont');
