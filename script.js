@@ -15,6 +15,7 @@ import {
 } from './utilities.js';
 
 import { Amplify } from 'aws-amplify';
+import { signUp, confirmSignUp } from 'aws-amplify/auth';
 import amplifyConfig from './amplify.js';
 Amplify.configure(amplifyConfig);
 const currentConfig = Amplify.getConfig();
@@ -89,7 +90,6 @@ let state = {
   id: 0,
   verified: false,
 };
-
 function checkLogin() {
   if (!state.verified) {
     loginBtn.style.display = 'block';
@@ -101,14 +101,39 @@ function checkLogin() {
     authd.style.display = 'block';
   }
 }
+checkLogin();
 
 loginBtn.addEventListener('click', () => loginScreen());
 
 function loginScreen() {
   loginModal.style.display = 'block';
+  document.querySelector('.regBtn').addEventListener('click', event => {
+    event.preventDefault();
+    const email = document.getElementById('emailText').value;
+    const password = document.getElementById('passwordText').value;
+    register({ email, password });
+  });
 }
 
-checkLogin();
+async function register({  email, password }) {
+  try {
+    const { isSignUpComplete, userId, nextStep } = await signUp({
+      username: email,
+      password,
+      options: {
+        userAttributes: {
+          email,
+        },
+      },
+    });
+    console.log(userId);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// async function registerConfirmation({user, confirmationCode})
+
 //
 //COURSE CREATION/RENDERING
 function getID() {

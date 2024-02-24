@@ -160,7 +160,7 @@ h4 {
   align-items: center;
 }
 .authd {
-  display: flex;
+  display: none;
   flex-direction: column;
   justify-content: space-evenly;
   gap: 2rem;
@@ -512,7 +512,7 @@ h4 {
   border-radius: 3px;
 }
 .login {
-  display: none;
+  /* display: none; */
   padding: 0.7rem;
   border-radius: 3px;
   border: none;

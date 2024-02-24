@@ -1,8 +1,8 @@
 const amplifyConfig = {
   Auth: {
     Cognito: {
-      userPoolId: 'us-west-2_GOqIVPrV5',
-      userPoolClientId: '3n52idg46mdb7ling8nbi45go7',
+      userPoolId: 'us-west-2_98u65X5GV',
+      userPoolClientId: '28eomo5pfl4tsavbn9rha1t3tn',
     },
   },
 };

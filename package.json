@@ -1,5 +1,12 @@
 {
+  "scripts": {
+    "build": "webpack --mode production"
+  },
   "dependencies": {
     "aws-amplify": "^6.0.16"
+  },
+  "devDependencies": {
+    "webpack": "^5.90.3",
+    "webpack-cli": "^5.1.4"
   }
 }
