@@ -15,7 +15,7 @@ import {
 } from './utilities.js';
 
 import { Amplify } from 'aws-amplify';
-import { signUp, confirmSignUp } from 'aws-amplify/auth';
+import { signUp, confirmSignUp, signIn } from 'aws-amplify/auth';
 import amplifyConfig from './amplify.js';
 Amplify.configure(amplifyConfig);
 const currentConfig = Amplify.getConfig();
@@ -54,6 +54,7 @@ const colorScheme = document.getElementById('colorScheme');
 const loginBtn = document.querySelector('.login');
 const authd = document.querySelector('.authd');
 const loginModal = document.querySelector('.modal-login');
+const codeWrapper = document.querySelector('.code-wrapper');
 //Upload
 const cloudIcon = document.querySelector('.cloud-icon');
 //X Button in modal windows
@@ -107,15 +108,23 @@ loginBtn.addEventListener('click', () => loginScreen());
 
 function loginScreen() {
   loginModal.style.display = 'block';
+
   document.querySelector('.regBtn').addEventListener('click', event => {
     event.preventDefault();
     const email = document.getElementById('emailText').value;
     const password = document.getElementById('passwordText').value;
     register({ email, password });
   });
+  document.querySelector('.loginBtn').addEventListener('click', event => {
+    event.preventDefault();
+    const email = document.getElementById('emailText').value;
+    const password = document.getElementById('passwordText').value;
+
+    userLogin({ email, password });
+  });
 }
 
-async function register({  email, password }) {
+async function register({ email, password }) {
   try {
     const { isSignUpComplete, userId, nextStep } = await signUp({
       username: email,
@@ -127,12 +136,46 @@ async function register({  email, password }) {
       },
     });
     console.log(userId);
+    confirmCodes();
   } catch (error) {
     console.log(error);
   }
 }
 
-// async function registerConfirmation({user, confirmationCode})
+function confirmCodes() {
+  const codeInputs = document.getElementById('confirmation-codes');
+  codeWrapper.style.display = 'block';
+  codeInputs.innerHTML = '';
+  for (let i = 0; i < 6; i++) {
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.maxLength = '1';
+    input.classList.add('code-input');
+    codeInputs.appendChild(input);
+  }
+  codeInputs.querySelectorAll('.code-input')[0].focus();
+}
+
+async function registerConfirmation({ user, confirmationCode }) {
+  try {
+    const { isSignUpComplete, nextStep } = await confirmSignUp({
+      username,
+      confirmationCode,
+    });
+  } catch (err) {
+    console.log('Error', err);
+  }
+}
+
+async function userLogin({ email, password }) {
+  console.log(email, password);
+  const username = email;
+  try {
+    const { isSignedIn, nextStep } = await signIn({ username, password });
+  } catch (err) {
+    console.log('Error', err);
+  }
+}
 
 //
 //COURSE CREATION/RENDERING

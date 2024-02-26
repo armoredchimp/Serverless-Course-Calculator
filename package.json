@@ -6,6 +6,7 @@
     "aws-amplify": "^6.0.16"
   },
   "devDependencies": {
+    "@types/amplify": "^1.1.28",
     "webpack": "^5.90.3",
     "webpack-cli": "^5.1.4"
   }
