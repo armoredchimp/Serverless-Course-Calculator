@@ -136,13 +136,13 @@ async function register({ email, password }) {
       },
     });
     console.log(userId);
-    confirmCodes();
+    confirmCodes(userId);
   } catch (error) {
     console.log(error);
   }
 }
 
-function confirmCodes() {
+function confirmCodes(user) {
   const codeInputs = document.getElementById('confirmation-codes');
   codeWrapper.style.display = 'block';
   codeInputs.innerHTML = '';
@@ -154,13 +154,40 @@ function confirmCodes() {
     codeInputs.appendChild(input);
   }
   codeInputs.querySelectorAll('.code-input')[0].focus();
+  attachInputListeners(user);
 }
 
-async function registerConfirmation({ user, confirmationCode }) {
+function attachInputListeners(user) {
+  const confInput = document.querySelectorAll('.code-input');
+  confInput.forEach((input, index) => {
+    input.addEventListener('keyup', event => {
+      if (event.key.match(/[^0-9]/)) {
+        input.value = '';
+        return;
+      }
+
+      if (input.value !== '' && index < confInput.length - 1) {
+        confInput[index + 1].focus();
+      }
+
+      if (Array.from(confInput).every(input => input.value !== '')) {
+        const confCode = Array.from(confInput)
+          .map(input => input.value)
+          .join('');
+        console.log(confCode);
+        registerConfirmation({ user, confCode });
+      }
+    });
+  });
+}
+
+async function registerConfirmation({ user, confCode }) {
+  console.log(user, confCode);
+
   try {
     const { isSignUpComplete, nextStep } = await confirmSignUp({
-      username,
-      confirmationCode,
+      username: user,
+      confirmationCode: confCode,
     });
   } catch (err) {
     console.log('Error', err);
@@ -172,6 +199,8 @@ async function userLogin({ email, password }) {
   const username = email;
   try {
     const { isSignedIn, nextStep } = await signIn({ username, password });
+    console.log(`${username} signed in!`);
+    state.verified = true;
   } catch (err) {
     console.log('Error', err);
   }
