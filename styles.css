@@ -164,6 +164,7 @@ h4 {
   flex-direction: column;
   justify-content: space-evenly;
   gap: 2rem;
+  margin-top: 0.6rem;
 }
 .authdPre {
   font-weight: 500;
@@ -175,6 +176,29 @@ h4 {
 .upload-to-cloud {
   pointer-events: none;
 }
+.authdBtns {
+  display: flex;
+}
+
+.logout-icon {
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-left: auto;
+  transition: transform 1s ease-in-out;
+  transform: translateX(1rem);
+  transform: translateY(0.5rem);
+}
+
+.logout-icon:hover {
+  transform: translateY(-0.5rem);
+  animation: slideDown 1s ease-in-out forwards;
+  color: var(--red-color);
+  cursor: pointer;
+}
 
 .cloud-icon {
   color: var(--text-color);
@@ -183,7 +207,7 @@ h4 {
   padding: 1rem;
   width: 2.5rem;
   height: 2.5rem;
-  margin-left: 3rem;
+  margin-left: auto;
   transition: transform 1s ease-in-out;
   /* margin-top: 2rem;  */
 }
@@ -191,6 +215,7 @@ h4 {
   transform: translateY(-0.5rem);
   animation: slideDown 1s ease-in-out forwards;
   color: var(--primary-color);
+  cursor: pointer;
 }
 .cloud-icon:active {
   /* transform: translateY(-1rem);
@@ -532,6 +557,7 @@ h4 {
   margin-bottom: 3rem;
   border-radius: 3px;
 }
+
 .login {
   /* display: none; */
   padding: 0.7rem;
@@ -550,6 +576,7 @@ h4 {
 .register:active {
   background-color: var(--yellow-color);
 }
+
 .sampler {
   padding-bottom: 40rem !important;
 }

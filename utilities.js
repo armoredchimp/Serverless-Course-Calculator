@@ -1,6 +1,6 @@
-function slightAbbrev(name) {
-  if (name.length > 19) {
-    return name.substring(0, 19) + '...';
+function slightAbbrev(name, val) {
+  if (name.length > val) {
+    return name.substring(0, val) + '...';
   } else {
     return name;
   }

@@ -15,7 +15,14 @@ import {
 } from './utilities.js';
 
 import { Amplify } from 'aws-amplify';
-import { signUp, confirmSignUp, signIn } from 'aws-amplify/auth';
+import {
+  signUp,
+  confirmSignUp,
+  signIn,
+  getCurrentUser,
+  signOut,
+  fetchAuthSession,
+} from 'aws-amplify/auth';
 import amplifyConfig from './amplify.js';
 Amplify.configure(amplifyConfig);
 const currentConfig = Amplify.getConfig();
@@ -52,9 +59,12 @@ const displayType = document.getElementById('displayType');
 const colorScheme = document.getElementById('colorScheme');
 //Login
 const loginBtn = document.querySelector('.login');
+
 const authd = document.querySelector('.authd');
+const authdUser = document.querySelector('.authdUser');
 const loginModal = document.querySelector('.modal-login');
 const codeWrapper = document.querySelector('.code-wrapper');
+const logout = document.querySelector('.logout-icon');
 //Upload
 const cloudIcon = document.querySelector('.cloud-icon');
 //X Button in modal windows
@@ -90,18 +100,37 @@ let state = {
   ascending: true,
   id: 0,
   verified: false,
+  currentUser: '',
 };
 function checkLogin() {
-  if (!state.verified) {
-    loginBtn.style.display = 'block';
-    cloudIcon.style.display = 'none';
-    authd.style.display = 'none';
-  } else {
-    loginBtn.style.display = 'none';
-    cloudIcon.style.display = 'flex';
-    authd.style.display = 'block';
+  currentAuthenticatedUser();
+  setTimeout(() => {
+    if (!state.verified) {
+      loginBtn.style.display = 'block';
+      cloudIcon.style.display = 'none';
+      authd.style.display = 'none';
+    } else {
+      loginBtn.style.display = 'none';
+      cloudIcon.style.display = 'flex';
+      authd.style.display = 'block';
+      authdUser.textContent = slightAbbrev(state.currentUser, 14);
+    }
+  }, 2000);
+}
+
+async function currentAuthenticatedUser() {
+  try {
+    const { username, userId } = await getCurrentUser();
+    console.log(`Username: ${username}`);
+    console.log(`User Id: ${userId}`);
+    state.currentUser = username;
+    state.verified = true;
+    console.log(state.currentUser, state.verified);
+  } catch (err) {
+    console.log(err);
   }
 }
+
 checkLogin();
 
 loginBtn.addEventListener('click', () => loginScreen());
@@ -136,7 +165,7 @@ async function register({ email, password }) {
       },
     });
     console.log(userId);
-    confirmCodes(userId);
+    confirmCodes(email);
   } catch (error) {
     console.log(error);
   }
@@ -174,7 +203,7 @@ function attachInputListeners(user) {
         const confCode = Array.from(confInput)
           .map(input => input.value)
           .join('');
-        console.log(confCode);
+        // console.log(confCode);
         registerConfirmation({ user, confCode });
       }
     });
@@ -189,20 +218,40 @@ async function registerConfirmation({ user, confCode }) {
       username: user,
       confirmationCode: confCode,
     });
+    console.log(`Code accepted!`);
+    codeWrapper.innerHTML = '';
+    codeWrapper.textContent = 'Success! Click to Login';
   } catch (err) {
     console.log('Error', err);
   }
 }
 
 async function userLogin({ email, password }) {
-  console.log(email, password);
   const username = email;
   try {
     const { isSignedIn, nextStep } = await signIn({ username, password });
     console.log(`${username} signed in!`);
+    loginModal.style.display = 'none';
     state.verified = true;
+    checkLogin();
+    resetModalValues();
   } catch (err) {
     console.log('Error', err);
+  }
+}
+
+logout.addEventListener('click', () => userLogout());
+
+async function userLogout() {
+  try {
+    await signOut();
+    console.log(`Signed out`);
+    loginBtn.style.display = 'block';
+    cloudIcon.style.display = 'none';
+    authd.style.display = 'none';
+    resetModalValues();
+  } catch (error) {
+    console.log(`Error signing out`);
   }
 }
 
@@ -292,7 +341,7 @@ class CourseItem extends Course {
       this.complete = true;
     }
     this.element.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="minus-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg><div class="name-small">${slightAbbrev(this.name)}</div>
+    </svg><div class="name-small">${slightAbbrev(this.name, 19)}</div>
     <div class="course-details alternate">
     <div class="detail-simple">
     <div class="nameBox">${this.name}</div>
@@ -704,6 +753,8 @@ function resetModalValues() {
   editHours.value = '';
   editCurHours.value = '';
   editProgress.value = '';
+  document.getElementById('emailText').value = '';
+  document.getElementById('passwordText').value = '';
 }
 
 //API CALLS
