@@ -185,12 +185,12 @@ h4 {
   display: flex;
   align-items: center;
   padding: 1rem;
-  width: 1.2rem;
-  height: 1.2rem;
+  width: 2.2rem;
+  height: 2.2rem;
   margin-left: auto;
   transition: transform 1s ease-in-out;
   transform: translateX(1rem);
-  transform: translateY(0.5rem);
+  transform: translateY(0.1rem);
 }
 
 .logout-icon:hover {

@@ -101,6 +101,7 @@ let state = {
   id: 0,
   verified: false,
   currentUser: '',
+  token: '',
 };
 function checkLogin() {
   currentAuthenticatedUser();
@@ -126,6 +127,20 @@ async function currentAuthenticatedUser() {
     state.currentUser = username;
     state.verified = true;
     console.log(state.currentUser, state.verified);
+    currentSession();
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function currentSession() {
+  try {
+    const { accessToken, idToken } = (await fetchAuthSession()).tokens ?? {};
+    console.log(idToken);
+    console.log(idToken.payload.email);
+    console.log(`access token: ${accessToken}`);
+    state.token = accessToken;
+    state.currentUser = idToken.payload.email;
   } catch (err) {
     console.log(err);
   }
@@ -756,39 +771,68 @@ function resetModalValues() {
   document.getElementById('emailText').value = '';
   document.getElementById('passwordText').value = '';
 }
-
+// authCheck();
 //API CALLS
-sampleLink.addEventListener('click', () => {
-  console.log('click');
-  const apiUrl = config.API_URL;
-  axios
-    .get(apiUrl)
-    .then(response => {
-      const courses = response.data.courses;
-      console.log(courses);
-      courses.forEach(
-        courses =>
-          new CourseItem(courses.name, courses.totalHours, courses.progress)
-      );
-      console.log(state.courses, state.displayCourses);
-      toggleCompleted();
-    })
-    .catch(error => {
-      console.error('Error fetching courses:', error);
-    });
+async function authCheck() {
+  try {
+    const { accessToken, idToken } = (await fetchAuthSession()).tokens ?? {};
+    let currentAccessToken = accessToken;
+    let currentId = idToken;
+    console.log(`current access token: ${currentAccessToken}`);
+    console.log(state.currentUser, currentId.payload.email);
+    if (
+      // state.token == currentAccessToken
+      state.currentUser === currentId.payload.email
+    ) {
+      console.log(`Auth check passed`);
+      return true;
+    } else {
+      console.log(`Auth check failed`);
+      return false;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
 
-  sampleClose();
+sampleLink.addEventListener('click', async () => {
+  console.log('click');
+  if (await authCheck()) {
+    const apiUrl = config.API_URL.replace('{id}', state.currentUser);
+    axios
+      .get(apiUrl)
+      .then(response => {
+        const courses = response.data.courses;
+        console.log(courses);
+        courses.forEach(
+          courses =>
+            new CourseItem(courses.name, courses.totalHours, courses.progress)
+        );
+        console.log(state.courses, state.displayCourses);
+        toggleCompleted();
+      })
+      .catch(error => {
+        console.error('Error fetching courses:', error);
+      });
+
+    sampleClose();
+  } else {
+    console.log('Authorization failed');
+  }
 });
 
-cloudIcon.addEventListener('click', () => {
-  const userId = document.querySelector('.authdUser').textContent;
-  const apiURL = config.API_PUT_URL.replace('{id}', userId);
-  console.log(state.courses);
-  const courseString = JSON.stringify(state.courses);
-  axios
-    .put(apiURL, courseString)
-    .then(response => console.log('Success:', response.data))
-    .catch(error => console.error('Error:', error));
+cloudIcon.addEventListener('click', async () => {
+  if (await authCheck()) {
+    const apiURL = config.API_PUT_URL.replace('{id}', state.currentUser);
+    console.log(state.courses);
+    const courseString = JSON.stringify(state.courses);
+    axios
+      .put(apiURL, courseString)
+      .then(response => console.log('Success:', response.data))
+      .catch(error => console.error('Error:', error));
+  } else {
+    console.log('Authorization failed');
+  }
 });
 
 //STARTUP DISPLAY
