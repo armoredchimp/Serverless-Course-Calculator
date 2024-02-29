@@ -53,10 +53,27 @@ function updateArray(array, id, name, totalHours, progress) {
     array[courseIndex].progress = progress;
   }
 }
+function validateEmail(email) {
+  return /^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/gm.test(email);
+}
+function validatePassword(password) {
+  const longEnough = password.length >= 8;
+  const hasUpper = /[A-Z]/.test(password);
+  const hasLower = /[a-z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecialChar =
+    /[\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]\{\}\;\'\:\"\,\<\.\>\/\?\|\\~`]/.test(
+      password
+    );
+
+  return longEnough && hasLower && hasUpper && hasNumber && hasSpecialChar;
+}
 export {
   slightAbbrev,
   padString,
   padStringFront,
   abbreviatedName,
   updateArray,
+  validateEmail,
+  validatePassword,
 };

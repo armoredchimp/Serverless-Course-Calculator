@@ -12,6 +12,8 @@ import {
   padStringFront,
   abbreviatedName,
   updateArray,
+  validateEmail,
+  validatePassword,
 } from './utilities.js';
 
 import { Amplify } from 'aws-amplify';
@@ -180,11 +182,18 @@ function loginScreen() {
     const email = document.getElementById('emailText').value;
     const password = document.getElementById('passwordText').value;
     if (validateEmail(email)) {
-      register({ email, password });
+      if (validatePassword(password)) {
+        register({ email, password });
+      } else {
+        alert(
+          'Password must be less than 8 characters, and contain at least: one upper case letter, one lower case letter, one number and one special character'
+        );
+      }
     } else {
       alert(`Please enter a valid email address`);
     }
   });
+
   document.querySelector('.loginBtn').addEventListener('click', event => {
     event.preventDefault();
     const email = document.getElementById('emailText').value;
@@ -192,10 +201,6 @@ function loginScreen() {
 
     userLogin({ email, password });
   });
-}
-
-function validateEmail(email) {
-  return /^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/gm.test(email);
 }
 
 async function register({ email, password }) {
