@@ -164,6 +164,14 @@ async function currentSession() {
 
 loginBtn.addEventListener('click', () => loginScreen());
 
+document.querySelector('.eye-icon').addEventListener('click', function () {
+  const passwordInput = document.getElementById('passwordText');
+  passwordInput.setAttribute(
+    'type',
+    passwordInput.getAttribute('type') === 'password' ? 'text' : 'password'
+  );
+});
+
 function loginScreen() {
   loginModal.style.display = 'block';
 

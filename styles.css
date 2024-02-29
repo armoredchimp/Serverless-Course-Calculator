@@ -557,7 +557,14 @@ h4 {
   margin-bottom: 3rem;
   border-radius: 3px;
 }
-
+.eye-icon {
+  height: 1rem;
+  width: 1rem;
+  transform: translateY(0.3rem);
+  margin-left: 0.3rem;
+  cursor: pointer;
+  user-select: none;
+}
 .login {
   /* display: none; */
   padding: 0.7rem;
