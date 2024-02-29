@@ -1,3 +1,5 @@
+0.8 2/28/24
+-- completed basic amplify / cognito user authentication, registration, login/out functionality. More error/edge case handling required.
 0.7 2/9/24
 -- added alternate display mode
 0.6 2/8/24

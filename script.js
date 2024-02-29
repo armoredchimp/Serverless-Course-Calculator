@@ -102,7 +102,10 @@ let state = {
   verified: false,
   currentUser: '',
   token: '',
+  codes: false,
+  got: false,
 };
+
 function checkLogin() {
   currentAuthenticatedUser();
   setTimeout(() => {
@@ -115,6 +118,19 @@ function checkLogin() {
       cloudIcon.style.display = 'flex';
       authd.style.display = 'block';
       authdUser.textContent = slightAbbrev(state.currentUser, 14);
+      setTimeout(async () => {
+        if (await authCheck()) {
+          if (!state.got) {
+            apiGetCourses();
+          }
+
+          renderCourses();
+        } else {
+          console.log('Authorization failed');
+          state.verified = false;
+          userLogout();
+        }
+      }, 2500);
     }
   }, 2000);
 }
@@ -138,15 +154,13 @@ async function currentSession() {
     const { accessToken, idToken } = (await fetchAuthSession()).tokens ?? {};
     console.log(idToken);
     console.log(idToken.payload.email);
-    console.log(`access token: ${accessToken}`);
+    // console.log(`access token: ${accessToken}`);
     state.token = accessToken;
     state.currentUser = idToken.payload.email;
   } catch (err) {
     console.log(err);
   }
 }
-
-checkLogin();
 
 loginBtn.addEventListener('click', () => loginScreen());
 
@@ -157,7 +171,11 @@ function loginScreen() {
     event.preventDefault();
     const email = document.getElementById('emailText').value;
     const password = document.getElementById('passwordText').value;
-    register({ email, password });
+    if (validateEmail(email)) {
+      register({ email, password });
+    } else {
+      alert(`Please enter a valid email address`);
+    }
   });
   document.querySelector('.loginBtn').addEventListener('click', event => {
     event.preventDefault();
@@ -166,6 +184,10 @@ function loginScreen() {
 
     userLogin({ email, password });
   });
+}
+
+function validateEmail(email) {
+  return /^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/gm.test(email);
 }
 
 async function register({ email, password }) {
@@ -187,6 +209,7 @@ async function register({ email, password }) {
 }
 
 function confirmCodes(user) {
+  state.codes = true;
   const codeInputs = document.getElementById('confirmation-codes');
   codeWrapper.style.display = 'block';
   codeInputs.innerHTML = '';
@@ -235,6 +258,7 @@ async function registerConfirmation({ user, confCode }) {
     });
     console.log(`Code accepted!`);
     codeWrapper.innerHTML = '';
+    state.codes = false;
     codeWrapper.textContent = 'Success! Click to Login';
   } catch (err) {
     console.log('Error', err);
@@ -248,8 +272,20 @@ async function userLogin({ email, password }) {
     console.log(`${username} signed in!`);
     loginModal.style.display = 'none';
     state.verified = true;
-    checkLogin();
+    state.currentUser = username;
     resetModalValues();
+    setTimeout(async () => {
+      if (await authCheck()) {
+        apiGetCourses();
+        renderCourses();
+        loginBtn.style.display = 'none';
+        cloudIcon.style.display = 'flex';
+        authd.style.display = 'block';
+        authdUser.textContent = slightAbbrev(state.currentUser, 14);
+      } else {
+        console.log('Authorization failed');
+      }
+    }, 2500);
   } catch (err) {
     console.log('Error', err);
   }
@@ -264,9 +300,16 @@ async function userLogout() {
     loginBtn.style.display = 'block';
     cloudIcon.style.display = 'none';
     authd.style.display = 'none';
+    clearCourses();
+    console.log(state.courses, state.displayCourses);
+    chartContainer.innerHTML = '';
     resetModalValues();
+    state.got = false;
+    state.id = 0;
+    state.token = '';
+    state.currentUser = '';
   } catch (error) {
-    console.log(`Error signing out`);
+    console.log(`Error signing out`, error);
   }
 }
 
@@ -384,6 +427,11 @@ class CourseItem extends Course {
     this.element.remove();
     removeCourse(this.id, this.totalHours);
   }
+}
+
+function clearCourses() {
+  state.courses.forEach(course => course.delete());
+  state.displayCourses.forEach(course => course.delete());
 }
 
 class Column {
@@ -768,8 +816,10 @@ function resetModalValues() {
   editHours.value = '';
   editCurHours.value = '';
   editProgress.value = '';
-  document.getElementById('emailText').value = '';
-  document.getElementById('passwordText').value = '';
+  if (!state.codes) {
+    document.getElementById('emailText').value = '';
+    document.getElementById('passwordText').value = '';
+  }
 }
 // authCheck();
 //API CALLS
@@ -778,8 +828,7 @@ async function authCheck() {
     const { accessToken, idToken } = (await fetchAuthSession()).tokens ?? {};
     let currentAccessToken = accessToken;
     let currentId = idToken;
-    console.log(`current access token: ${currentAccessToken}`);
-    console.log(state.currentUser, currentId.payload.email);
+    // console.log(`current access token: ${currentAccessToken}`);
     if (
       // state.token == currentAccessToken
       state.currentUser === currentId.payload.email
@@ -788,6 +837,7 @@ async function authCheck() {
       return true;
     } else {
       console.log(`Auth check failed`);
+      console.log(`1: ${state.currentUser}, 2: ${currentId.payload.email}`);
       return false;
     }
   } catch (err) {
@@ -797,29 +847,54 @@ async function authCheck() {
 
 sampleLink.addEventListener('click', async () => {
   console.log('click');
-  if (await authCheck()) {
-    const apiUrl = config.API_URL.replace('{id}', state.currentUser);
-    axios
-      .get(apiUrl)
-      .then(response => {
-        const courses = response.data.courses;
-        console.log(courses);
-        courses.forEach(
-          courses =>
-            new CourseItem(courses.name, courses.totalHours, courses.progress)
-        );
-        console.log(state.courses, state.displayCourses);
-        toggleCompleted();
-      })
-      .catch(error => {
-        console.error('Error fetching courses:', error);
-      });
 
-    sampleClose();
-  } else {
-    console.log('Authorization failed');
+  if (!state.got) {
+    apiGetTestCourses();
   }
 });
+
+async function apiGetCourses() {
+  const apiUrl = config.API_URL.replace('{id}', state.currentUser);
+  axios
+    .get(apiUrl)
+    .then(response => {
+      const courses = response.data.courses;
+      courses.forEach(
+        courses =>
+          new CourseItem(courses.name, courses.totalHours, courses.progress)
+      );
+      console.log(state.courses, state.displayCourses);
+      state.got = true;
+      toggleCompleted();
+    })
+    .catch(error => {
+      console.error('Error fetching courses:', error);
+    });
+
+  sampleClose();
+}
+
+async function apiGetTestCourses() {
+  const apiUrl = config.API_TEST_URL;
+  axios
+    .get(apiUrl)
+    .then(response => {
+      const courses = response.data.courses;
+      courses.forEach(
+        courses =>
+          new CourseItem(courses.name, courses.totalHours, courses.progress)
+      );
+      console.log(state.courses, state.displayCourses);
+      state.got = true;
+
+      toggleCompleted();
+    })
+    .catch(error => {
+      console.error('Error fetching courses:', error);
+    });
+
+  sampleClose();
+}
 
 cloudIcon.addEventListener('click', async () => {
   if (await authCheck()) {
@@ -912,5 +987,7 @@ function displayInfo(id) {
   chartText.appendChild(hours);
   chartText.appendChild(percentage);
 }
+
+checkLogin();
 samplePrompt();
 completed();
