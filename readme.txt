@@ -1,3 +1,5 @@
+https://courseload-calc.netlify.app/
+
 0.8 2/28/24
 -- completed basic amplify / cognito user authentication, registration, login/out functionality. More error/edge case handling required.
 0.7 2/9/24
