@@ -1,11 +1,11 @@
-('use strict');
+("use strict");
 
 import {
   getColor,
   bigColor,
   invertedBigColor,
   percentColor,
-} from './colors.js';
+} from "./colors.js";
 import {
   slightAbbrev,
   padString,
@@ -14,9 +14,10 @@ import {
   updateArray,
   validateEmail,
   validatePassword,
-} from './utilities.js';
+} from "./utilities.js";
+import { config } from "./config.js";
 
-import { Amplify } from 'aws-amplify';
+import { Amplify } from "aws-amplify";
 import {
   signUp,
   confirmSignUp,
@@ -24,70 +25,70 @@ import {
   getCurrentUser,
   signOut,
   fetchAuthSession,
-} from 'aws-amplify/auth';
-import amplifyConfig from './amplify.js';
+} from "aws-amplify/auth";
+import amplifyConfig from "./amplify.js";
 Amplify.configure(amplifyConfig);
 const currentConfig = Amplify.getConfig();
 console.log(currentConfig);
 
 //Selectors
-const smallMode = window.matchMedia('(max-width: 375px)');
-const topCont = document.querySelector('.top-cont');
+const smallMode = window.matchMedia("(max-width: 375px)");
+const topCont = document.querySelector(".top-cont");
 //Main Body for course list
-const courseUL = document.querySelector('.courses');
+const courseUL = document.querySelector(".courses");
 //Add Course Selectors
-const addNew = document.querySelector('.add-new');
-const addCmodal = document.querySelector('.addC-modal');
-const addCourseBtn = document.getElementById('addCourseBtn');
-const addCName = document.getElementById('addCourseName');
-const addTotalHours = document.getElementById('addTotalHours');
-const addCCurrHours = document.getElementById('addCurrHours');
-const addCProgress = document.getElementById('addProgress');
-const viewResults = document.querySelector('.jump-down');
+const addNew = document.querySelector(".add-new");
+const addCmodal = document.querySelector(".addC-modal");
+const addCourseBtn = document.getElementById("addCourseBtn");
+const addCName = document.getElementById("addCourseName");
+const addTotalHours = document.getElementById("addTotalHours");
+const addCCurrHours = document.getElementById("addCurrHours");
+const addCProgress = document.getElementById("addProgress");
+const viewResults = document.querySelector(".jump-down");
 //Sorting Selectors
-const sortIcon = document.querySelector('.sort-icon');
-const sortCriteria = document.getElementById('sortCriteria');
-const ascendIcon = document.getElementById('ascend-icon');
-const descendIcon = document.getElementById('descend-icon');
+const sortIcon = document.querySelector(".sort-icon");
+const sortCriteria = document.getElementById("sortCriteria");
+const ascendIcon = document.getElementById("ascend-icon");
+const descendIcon = document.getElementById("descend-icon");
 //Edit Course Selectors
-const editCmodal = document.querySelector('.modal-edit');
-const editName = document.getElementById('courseNameE');
-const editHours = document.getElementById('totalHoursE');
-const editCurHours = document.getElementById('totalHoursC');
-const editProgress = document.getElementById('percentCompE');
-const editButton = document.getElementById('editCourseBtn');
+const editCmodal = document.querySelector(".modal-edit");
+const editName = document.getElementById("courseNameE");
+const editHours = document.getElementById("totalHoursE");
+const editCurHours = document.getElementById("totalHoursC");
+const editProgress = document.getElementById("percentCompE");
+const editButton = document.getElementById("editCourseBtn");
 //Toggle Completed
-const toggleBtn = document.getElementById('toggle-completed');
-const displayType = document.getElementById('displayType');
-const colorScheme = document.getElementById('colorScheme');
+const toggleBtn = document.getElementById("toggle-completed");
+const displayType = document.getElementById("displayType");
+const colorScheme = document.getElementById("colorScheme");
 //Login
-const loginBtn = document.querySelector('.login');
+const loginBtn = document.querySelector(".login");
 
-const authd = document.querySelector('.authd');
-const authdUser = document.querySelector('.authdUser');
-const loginModal = document.querySelector('.modal-login');
-const codeWrapper = document.querySelector('.code-wrapper');
-const logout = document.querySelector('.logout-icon');
+const authd = document.querySelector(".authd");
+const authdUser = document.querySelector(".authdUser");
+const loginModal = document.querySelector(".modal-login");
+const codeWrapper = document.querySelector(".code-wrapper");
+const logout = document.querySelector(".logout-icon");
 //Upload
-const cloudIcon = document.querySelector('.cloud-icon');
+const cloudIcon = document.querySelector(".cloud-icon");
 //X Button in modal windows
-const closeModal = document.querySelector('.close');
-const closeEdit = document.querySelector('.closeEdit');
-const closeLogin = document.querySelector('.closeLogin');
+const closeModal = document.querySelector(".close");
+const closeEdit = document.querySelector(".closeEdit");
+const closeLogin = document.querySelector(".closeLogin");
 //Starting Text
-const ultraCont = document.querySelector('.ultra-cont');
-const messageCont = document.querySelector('.message-cont');
-const addLink = document.querySelector('.addLink');
-const sampleLink = document.querySelector('.sampleLink');
+const ultraCont = document.querySelector(".ultra-cont");
+const messageCont = document.querySelector(".message-cont");
+const addLink = document.querySelector(".addLink");
+const sampleLink = document.querySelector(".sampleLink");
 //Result Section
-const resCurHours = document.querySelector('.current-hours');
-const resTotHours = document.querySelector('.all-hours');
-const resRemHours = document.querySelector('.remaining-hours');
-const resCompPerc = document.querySelector('.completion-percent');
-const resRemPerc = document.querySelector('.remaining-percent');
-const pieChart = document.getElementById('pieChart');
-const pieLabel = document.querySelector('.pie-label');
-const chartContainer = document.getElementById('columnChart');
+const resCurHours = document.querySelector(".current-hours");
+const resTotHours = document.querySelector(".all-hours");
+const resRemHours = document.querySelector(".remaining-hours");
+const resCompPerc = document.querySelector(".completion-percent");
+const resRemPerc = document.querySelector(".remaining-percent");
+const pieChart = document.getElementById("pieChart");
+const pieLabel = document.querySelector(".pie-label");
+const chartContainer = document.getElementById("columnChart");
 
 //
 //STATE OBJECT
@@ -98,13 +99,13 @@ let state = {
   currentEdit: null,
   showCompleted: true,
   total: 0,
-  colors: 'dark',
-  sortCriteria: 'percent',
+  colors: "dark",
+  sortCriteria: "percent",
   ascending: true,
   id: 0,
   verified: false,
-  currentUser: '',
-  token: '',
+  currentUser: "",
+  token: "",
   codes: false,
   got: false,
 };
@@ -113,13 +114,13 @@ function checkLogin() {
   currentAuthenticatedUser();
   setTimeout(() => {
     if (!state.verified) {
-      loginBtn.style.display = 'block';
-      cloudIcon.style.display = 'none';
-      authd.style.display = 'none';
+      loginBtn.style.display = "block";
+      cloudIcon.style.display = "none";
+      authd.style.display = "none";
     } else {
-      loginBtn.style.display = 'none';
-      cloudIcon.style.display = 'flex';
-      authd.style.display = 'block';
+      loginBtn.style.display = "none";
+      cloudIcon.style.display = "flex";
+      authd.style.display = "block";
       authdUser.textContent = slightAbbrev(state.currentUser, 14);
       setTimeout(async () => {
         if (await authCheck()) {
@@ -129,7 +130,7 @@ function checkLogin() {
 
           renderCourses();
         } else {
-          console.log('Authorization failed');
+          console.log("Authorization failed");
           state.verified = false;
           userLogout();
         }
@@ -165,29 +166,29 @@ async function currentSession() {
   }
 }
 
-loginBtn.addEventListener('click', () => loginScreen());
+loginBtn.addEventListener("click", () => loginScreen());
 
-document.querySelector('.eye-icon').addEventListener('click', function () {
-  const passwordInput = document.getElementById('passwordText');
+document.querySelector(".eye-icon").addEventListener("click", function () {
+  const passwordInput = document.getElementById("passwordText");
   passwordInput.setAttribute(
-    'type',
-    passwordInput.getAttribute('type') === 'password' ? 'text' : 'password'
+    "type",
+    passwordInput.getAttribute("type") === "password" ? "text" : "password"
   );
 });
 
 function loginScreen() {
-  loginModal.style.display = 'block';
+  loginModal.style.display = "block";
 
-  document.querySelector('.regBtn').addEventListener('click', event => {
+  document.querySelector(".regBtn").addEventListener("click", (event) => {
     event.preventDefault();
-    const email = document.getElementById('emailText').value;
-    const password = document.getElementById('passwordText').value;
+    const email = document.getElementById("emailText").value;
+    const password = document.getElementById("passwordText").value;
     if (validateEmail(email)) {
       if (validatePassword(password)) {
         register({ email, password });
       } else {
         alert(
-          'Password must be less than 8 characters, and contain at least: one upper case letter, one lower case letter, one number and one special character'
+          "Password must be less than 8 characters, and contain at least: one upper case letter, one lower case letter, one number and one special character"
         );
       }
     } else {
@@ -195,10 +196,10 @@ function loginScreen() {
     }
   });
 
-  document.querySelector('.loginBtn').addEventListener('click', event => {
+  document.querySelector(".loginBtn").addEventListener("click", (event) => {
     event.preventDefault();
-    const email = document.getElementById('emailText').value;
-    const password = document.getElementById('passwordText').value;
+    const email = document.getElementById("emailText").value;
+    const password = document.getElementById("passwordText").value;
 
     userLogin({ email, password });
   });
@@ -224,37 +225,37 @@ async function register({ email, password }) {
 
 function confirmCodes(user) {
   state.codes = true;
-  const codeInputs = document.getElementById('confirmation-codes');
-  codeWrapper.style.display = 'block';
-  codeInputs.innerHTML = '';
+  const codeInputs = document.getElementById("confirmation-codes");
+  codeWrapper.style.display = "block";
+  codeInputs.innerHTML = "";
   for (let i = 0; i < 6; i++) {
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.maxLength = '1';
-    input.classList.add('code-input');
+    const input = document.createElement("input");
+    input.type = "text";
+    input.maxLength = "1";
+    input.classList.add("code-input");
     codeInputs.appendChild(input);
   }
-  codeInputs.querySelectorAll('.code-input')[0].focus();
+  codeInputs.querySelectorAll(".code-input")[0].focus();
   attachInputListeners(user);
 }
 
 function attachInputListeners(user) {
-  const confInput = document.querySelectorAll('.code-input');
+  const confInput = document.querySelectorAll(".code-input");
   confInput.forEach((input, index) => {
-    input.addEventListener('keyup', event => {
+    input.addEventListener("keyup", (event) => {
       if (event.key.match(/[^0-9]/)) {
-        input.value = '';
+        input.value = "";
         return;
       }
 
-      if (input.value !== '' && index < confInput.length - 1) {
+      if (input.value !== "" && index < confInput.length - 1) {
         confInput[index + 1].focus();
       }
 
-      if (Array.from(confInput).every(input => input.value !== '')) {
+      if (Array.from(confInput).every((input) => input.value !== "")) {
         const confCode = Array.from(confInput)
-          .map(input => input.value)
-          .join('');
+          .map((input) => input.value)
+          .join("");
         // console.log(confCode);
         registerConfirmation({ user, confCode });
       }
@@ -271,11 +272,11 @@ async function registerConfirmation({ user, confCode }) {
       confirmationCode: confCode,
     });
     console.log(`Code accepted!`);
-    codeWrapper.innerHTML = '';
+    codeWrapper.innerHTML = "";
     state.codes = false;
-    codeWrapper.textContent = 'Success! Click to Login';
+    codeWrapper.textContent = "Success! Click to Login";
   } catch (err) {
-    console.log('Error', err);
+    console.log("Error", err);
   }
 }
 
@@ -284,7 +285,7 @@ async function userLogin({ email, password }) {
   try {
     const { isSignedIn, nextStep } = await signIn({ username, password });
     console.log(`${username} signed in!`);
-    loginModal.style.display = 'none';
+    loginModal.style.display = "none";
     state.verified = true;
     state.currentUser = username;
     resetModalValues();
@@ -292,36 +293,36 @@ async function userLogin({ email, password }) {
       if (await authCheck()) {
         apiGetCourses();
         renderCourses();
-        loginBtn.style.display = 'none';
-        cloudIcon.style.display = 'flex';
-        authd.style.display = 'block';
+        loginBtn.style.display = "none";
+        cloudIcon.style.display = "flex";
+        authd.style.display = "block";
         authdUser.textContent = slightAbbrev(state.currentUser, 14);
       } else {
-        console.log('Authorization failed');
+        console.log("Authorization failed");
       }
     }, 2500);
   } catch (err) {
-    console.log('Error', err);
+    console.log("Error", err);
   }
 }
 
-logout.addEventListener('click', () => userLogout());
+logout.addEventListener("click", () => userLogout());
 
 async function userLogout() {
   try {
     await signOut();
     console.log(`Signed out`);
-    loginBtn.style.display = 'block';
-    cloudIcon.style.display = 'none';
-    authd.style.display = 'none';
+    loginBtn.style.display = "block";
+    cloudIcon.style.display = "none";
+    authd.style.display = "none";
     clearCourses();
     console.log(state.courses, state.displayCourses);
-    chartContainer.innerHTML = '';
+    chartContainer.innerHTML = "";
     resetModalValues();
     state.got = false;
     state.id = 0;
-    state.token = '';
-    state.currentUser = '';
+    state.token = "";
+    state.currentUser = "";
   } catch (error) {
     console.log(`Error signing out`, error);
   }
@@ -373,10 +374,10 @@ class CourseItem extends Course {
   render() {
     this.progressColor = percentColor(this.progress);
     this.colorR = getColor(this.remainingHours());
-    this.element = document.createElement('div');
-    this.element.className = 'course-line';
+    this.element = document.createElement("div");
+    this.element.className = "course-line";
     if (this.progress === 100) {
-      this.element.style.backgroundColor = 'var(--highlight-color)';
+      this.element.style.backgroundColor = "var(--highlight-color)";
       this.complete = true;
     }
     this.element.innerHTML = `
@@ -384,11 +385,11 @@ class CourseItem extends Course {
     </svg>
     <div class="course-details">
      <div class="detail-text"><div class="text1"> <span style="color: ${
-       this.complete ? 'var(--text-color)' : this.progressColor
+       this.complete ? "var(--text-color)" : this.progressColor
      };">${this.progress}%</span> of the ${this.totalHours}-hour ${
       this.name
     } course has been completed, which is roughly ${this.completedHours()} hours.</div><div class="text2"> <span style="color: ${
-      this.complete ? 'var(--text-color)' : this.colorR
+      this.complete ? "var(--text-color)" : this.colorR
     };">${this.remainingHours().toFixed(2)}</span> hours remain for this course.
     </div></div></div>
     <div class="course-percent-text">${this.percent()}% completed out of ${this.percentOfTotal()}% of the entire courseload</div>
@@ -403,13 +404,13 @@ class CourseItem extends Course {
     this.progressColor = percentColor(this.progress);
     this.colorR = getColor(this.remainingHours());
     this.colorC = getColor(this.completedHours());
-    this.element = document.createElement('div');
+    this.element = document.createElement("div");
     this.simplePerc = padString(this.progress);
     this.simpleCompleted = padStringFront(this.completedHours().toFixed(2));
     this.simpleRemaining = padStringFront(this.remainingHours().toFixed(2));
-    this.element.className = 'course-line';
+    this.element.className = "course-line";
     if (this.progress === 100) {
-      this.element.style.backgroundColor = 'var(--highlight-color)';
+      this.element.style.backgroundColor = "var(--highlight-color)";
       this.complete = true;
     }
     this.element.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="minus-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -418,13 +419,13 @@ class CourseItem extends Course {
     <div class="detail-simple">
     <div class="nameBox">${this.name}</div>
     <div class="percBox"><span style="color: ${
-      this.complete ? 'var(--text-color)' : this.progressColor
+      this.complete ? "var(--text-color)" : this.progressColor
     };">${this.simplePerc}%</span></div>
     <div class="currBox"><span style="color: ${
-      this.complete ? 'var(--text-color)' : this.colorC
+      this.complete ? "var(--text-color)" : this.colorC
     };">${this.simpleCompleted}</span>&nbsp;&nbsp;&nbsp;hours completed</div>
     <div class="remBox"><span style="color: ${
-      this.complete ? 'var(--text-color)' : this.colorR
+      this.complete ? "var(--text-color)" : this.colorR
     };">${this.simpleRemaining}</span>&nbsp;&nbsp;&nbsp;hours remaining</div>
     
     </div></div>
@@ -444,8 +445,8 @@ class CourseItem extends Course {
 }
 
 function clearCourses() {
-  state.courses.forEach(course => course.delete());
-  state.displayCourses.forEach(course => course.delete());
+  state.courses.forEach((course) => course.delete());
+  state.displayCourses.forEach((course) => course.delete());
 }
 
 class Column {
@@ -473,55 +474,55 @@ class Column {
   }
 
   columnHoriz(courses, thickness) {
-    console.log('horz');
-    chartContainer.classList.remove('column-chart');
-    chartContainer.classList.add('column-chartH');
-    courses.forEach(course => {
-      const bar = document.createElement('div');
-      const label = document.createElement('div');
+    console.log("horz");
+    chartContainer.classList.remove("column-chart");
+    chartContainer.classList.add("column-chartH");
+    courses.forEach((course) => {
+      const bar = document.createElement("div");
+      const label = document.createElement("div");
       const coursePerc = (course.completedHours() / this.total) * 100;
-      bar.classList.add('column');
+      bar.classList.add("column");
       bar.style.width = `${coursePerc}%`;
       bar.style.height = `${thickness}%`;
       bar.style.backgroundColor = invertedBigColor(coursePerc);
-      label.classList.add('column-labelH');
+      label.classList.add("column-labelH");
       label.textContent = course.name;
 
       bar.appendChild(label);
-      bar.addEventListener('mouseenter', () => displayInfo(course.id));
+      bar.addEventListener("mouseenter", () => displayInfo(course.id));
       chartContainer.appendChild(bar);
     });
   }
 
   columnVert(courses, thickness) {
-    const chartText = document.getElementById('chartText');
-    chartContainer.classList.remove('column-chartH');
-    chartContainer.classList.add('column-chart');
+    const chartText = document.getElementById("chartText");
+    chartContainer.classList.remove("column-chartH");
+    chartContainer.classList.add("column-chart");
 
-    courses.forEach(course => {
-      const column = document.createElement('div');
-      const label = document.createElement('div');
+    courses.forEach((course) => {
+      const column = document.createElement("div");
+      const label = document.createElement("div");
       const coursePerc = (course.completedHours() / this.total) * 100;
-      column.classList.add('column');
+      column.classList.add("column");
       column.style.height = `${coursePerc}%`;
       column.style.width = `${thickness}%`;
       column.style.backgroundColor = invertedBigColor(coursePerc);
-      label.classList.add('column-label');
+      label.classList.add("column-label");
       label.textContent = abbreviatedName(course.name);
 
       column.appendChild(label);
-      column.addEventListener('mouseenter', () => {
+      column.addEventListener("mouseenter", () => {
         displayInfo(course.id);
         column.style.backgroundColor = bigColor(coursePerc);
       });
 
       column.addEventListener(
-        'mouseleave',
+        "mouseleave",
         () => (column.style.backgroundColor = invertedBigColor(coursePerc))
       );
       chartContainer.addEventListener(
-        'mouseleave',
-        () => (chartText.textContent = 'Hours Completed')
+        "mouseleave",
+        () => (chartText.textContent = "Hours Completed")
       );
       chartContainer.appendChild(column);
     });
@@ -529,30 +530,30 @@ class Column {
 }
 
 function renderCourses() {
-  courseUL.innerHTML = '';
+  courseUL.innerHTML = "";
 
-  const selectedType = document.getElementById('displayType').value;
+  const selectedType = document.getElementById("displayType").value;
   let renderMethod;
-  if (selectedType === 'basic-display') {
-    renderMethod = course => course.renderSimple();
-  } else if (selectedType === 'text-display') {
-    renderMethod = course => course.render();
+  if (selectedType === "basic-display") {
+    renderMethod = (course) => course.renderSimple();
+  } else if (selectedType === "text-display") {
+    renderMethod = (course) => course.render();
   }
 
-  state.displayCourses.forEach(course => {
+  state.displayCourses.forEach((course) => {
     renderMethod(course);
-    const listItem = document.createElement('li');
+    const listItem = document.createElement("li");
     listItem.appendChild(course.element);
-    const minusSelector = listItem.querySelector('.minus-icon');
-    const resetBtn = listItem.querySelector('.reset-button');
-    resetBtn.addEventListener('click', () => {
+    const minusSelector = listItem.querySelector(".minus-icon");
+    const resetBtn = listItem.querySelector(".reset-button");
+    resetBtn.addEventListener("click", () => {
       reset(course.id);
     });
-    const editBtn = listItem.querySelector('.edit-button');
-    editBtn.addEventListener('click', () => {
+    const editBtn = listItem.querySelector(".edit-button");
+    editBtn.addEventListener("click", () => {
       editCourse(course.id);
     });
-    minusSelector.addEventListener('click', () => {
+    minusSelector.addEventListener("click", () => {
       course.delete();
       console.log(state.courses, state.displayCourses);
     });
@@ -561,26 +562,26 @@ function renderCourses() {
   completed();
 }
 
-displayType.addEventListener('change', renderCourses);
+displayType.addEventListener("change", renderCourses);
 
 //SORTING
-sortIcon.addEventListener('click', () => {
+sortIcon.addEventListener("click", () => {
   state.ascending = !state.ascending;
   sortCourses();
   toggleSortIcon();
 });
-sortCriteria.addEventListener('change', () => {
+sortCriteria.addEventListener("change", () => {
   sortCourses();
   toggleSortIcon();
 });
 
 function toggleSortIcon() {
   if (state.ascending) {
-    ascendIcon.style.display = 'none';
-    descendIcon.style.display = 'inline';
+    ascendIcon.style.display = "none";
+    descendIcon.style.display = "inline";
   } else {
-    ascendIcon.style.display = 'inline';
-    descendIcon.style.display = 'none';
+    ascendIcon.style.display = "inline";
+    descendIcon.style.display = "none";
   }
 }
 
@@ -597,7 +598,7 @@ function sortArray(array) {
   array.sort((a, b) => {
     let compareA, compareB;
 
-    if (selectedCriteria === 'progress') {
+    if (selectedCriteria === "progress") {
       compareA = a.progress;
       compareB = b.progress;
     } else {
@@ -609,111 +610,113 @@ function sortArray(array) {
 }
 
 //TOGGLE COMPLETED COURSES
-toggleBtn.addEventListener('click', () => {
+toggleBtn.addEventListener("click", () => {
   state.showCompleted = !state.showCompleted;
   toggleBtn.className = state.showCompleted
-    ? 'fas fa-toggle-on'
-    : 'fas fa-toggle-off';
+    ? "fas fa-toggle-on"
+    : "fas fa-toggle-off";
   toggleCompleted();
 });
 
 function toggleCompleted() {
   if (state.showCompleted) {
-    state.hiddenCourses.forEach(course => {
+    state.hiddenCourses.forEach((course) => {
       state.displayCourses.push(course);
     });
     state.hiddenCourses = [];
   } else {
-    state.displayCourses.forEach(course => {
+    state.displayCourses.forEach((course) => {
       if (course.progress === 100) {
         state.hiddenCourses.push(course);
       }
     });
     state.displayCourses = state.displayCourses.filter(
-      course => course.progress !== 100
+      (course) => course.progress !== 100
     );
   }
   renderCourses();
 }
 
 //COLOR SCHEME
-colorScheme.addEventListener('change', () => {
-  document.body.classList.remove('dark');
-  document.body.classList.remove('simple');
-  document.body.classList.remove('colorful');
+colorScheme.addEventListener("change", () => {
+  document.body.classList.remove("dark");
+  document.body.classList.remove("simple");
+  document.body.classList.remove("colorful");
   let currentColorScheme = colorScheme.value;
 
   document.body.classList.add(`${currentColorScheme}`);
 });
 
 //ADD AND REMOVE COURSES
-addNew.addEventListener('click', () => newCourse());
+addNew.addEventListener("click", () => newCourse());
 
-addLink.addEventListener('click', () => newCourse());
+addLink.addEventListener("click", () => newCourse());
 
-viewResults.addEventListener('click', () => scrollDown());
+viewResults.addEventListener("click", () => scrollDown());
 
 function handleMediaQuery(e) {
   if (e.matches) {
-    addCmodal.classList.add('small-modal');
+    addCmodal.classList.add("small-modal");
   } else {
-    addCmodal.classList.remove('small-modal');
+    addCmodal.classList.remove("small-modal");
   }
 }
 
 function scrollDown() {
   pieChart.scrollIntoView({
-    behavior: 'smooth',
-    block: 'center',
+    behavior: "smooth",
+    block: "center",
   });
 }
 
 function newCourse() {
-  addCmodal.style.display = 'block';
-  addCProgress.addEventListener('input', function () {
+  addCmodal.style.display = "block";
+  addCProgress.addEventListener("input", function () {
     const newHours =
       Math.round((this.value / 100) * addTotalHours.value * 100) / 100;
     addCCurrHours.value = newHours;
   });
-  addCCurrHours.addEventListener('input', function () {
+  addCCurrHours.addEventListener("input", function () {
     const newPercent =
       Math.round((this.value / addTotalHours.value) * 100 * 100) / 100;
     addCProgress.value = newPercent;
   });
 }
 
-addCourseBtn.addEventListener('click', () => {
-  const courseName = document.getElementById('addCourseName').value;
-  const totalHours = Number(document.getElementById('addTotalHours').value);
-  const currentProgress = Number(document.getElementById('addProgress').value);
+addCourseBtn.addEventListener("click", () => {
+  const courseName = document.getElementById("addCourseName").value;
+  const totalHours = Number(document.getElementById("addTotalHours").value);
+  const currentProgress = Number(document.getElementById("addProgress").value);
   if (
     currentProgress >= 0 &&
     currentProgress <= 100 &&
-    courseName !== '' &&
+    courseName !== "" &&
     totalHours > 0
   ) {
     const newCourse = new CourseItem(courseName, totalHours, currentProgress);
     toggleCompleted();
-    addCmodal.style.display = 'none';
+    addCmodal.style.display = "none";
     resetModalValues();
     console.log(state.courses, state.displayCourses);
   } else if (currentProgress < 0 || currentProgress > 100) {
-    alert('Must enter a percentage from 0-100');
-    document.getElementById('addProgress').value = '0';
-  } else if (courseName.trim() === '') {
-    alert('Must enter a course name');
+    alert("Must enter a percentage from 0-100");
+    document.getElementById("addProgress").value = "0";
+  } else if (courseName.trim() === "") {
+    alert("Must enter a course name");
   } else {
-    alert('Must enter a value for total hours');
+    alert("Must enter a value for total hours");
   }
 });
 
 function removeCourse(id, hours) {
   state.total -= hours;
-  state.courses = state.courses.filter(course => course.id !== id);
+  state.courses = state.courses.filter((course) => course.id !== id);
   state.displayCourses = state.displayCourses.filter(
-    course => course.id !== id
+    (course) => course.id !== id
   );
-  state.hiddenCourses = state.hiddenCourses.filter(course => course.id !== id);
+  state.hiddenCourses = state.hiddenCourses.filter(
+    (course) => course.id !== id
+  );
   if (state.courses.length === 0) {
     samplePrompt();
   }
@@ -730,7 +733,7 @@ function reset(id) {
 
 function resetCourse(id, array) {
   state.currentEdit = id;
-  const course = array.find(course => course.id === id);
+  const course = array.find((course) => course.id === id);
   if (course) {
     course.progress = 0;
   }
@@ -739,38 +742,38 @@ function resetCourse(id, array) {
 //EDIT COURSE
 function editCourse(id) {
   state.currentEdit = id;
-  const course = state.courses.find(course => course.id === id);
+  const course = state.courses.find((course) => course.id === id);
   editName.value = course.name;
   editHours.value = course.totalHours;
   editCurHours.value = course.completedHours();
   editProgress.value = course.progress;
-  editCmodal.style.display = 'block';
+  editCmodal.style.display = "block";
 
-  editProgress.addEventListener('input', function () {
+  editProgress.addEventListener("input", function () {
     const newHours =
       Math.round((this.value / 100) * editHours.value * 100) / 100;
     editCurHours.value = newHours;
   });
-  editCurHours.addEventListener('input', function () {
+  editCurHours.addEventListener("input", function () {
     const newPercent =
       Math.round((this.value / editHours.value) * 100 * 100) / 100;
     editProgress.value = newPercent;
   });
 }
 
-editButton.addEventListener('click', () => {
+editButton.addEventListener("click", () => {
   const editedCourseName = editName.value;
   const editedTotalHours = Number(editHours.value);
   const editedCurProgress = Number(editProgress.value);
 
   if (
-    editedCourseName.trim() !== '' &&
+    editedCourseName.trim() !== "" &&
     editedTotalHours > 0 &&
     editedCurProgress >= 0 &&
     editedCurProgress <= 100
   ) {
     [state.courses, state.displayCourses, state.hiddenCourses].forEach(
-      array => {
+      (array) => {
         updateArray(
           array,
           state.currentEdit,
@@ -780,59 +783,59 @@ editButton.addEventListener('click', () => {
         );
       }
     );
-    editCmodal.style.display = 'none';
+    editCmodal.style.display = "none";
     toggleCompleted();
   } else {
     if (editedCurProgress < 0 || editedCurProgress > 100) {
-      alert('Must enter a percentage from 0-100');
-      currentProgress.value = '0';
-    } else if (editedCourseName === '') {
-      alert('Must enter a course name');
+      alert("Must enter a percentage from 0-100");
+      currentProgress.value = "0";
+    } else if (editedCourseName === "") {
+      alert("Must enter a course name");
     } else if (editedTotalHours <= 0) {
-      alert('Must enter a value for total hours greater than 0');
+      alert("Must enter a value for total hours greater than 0");
     }
   }
 });
 
 //CLOSE AND RESET MODALS
-closeModal.addEventListener('click', () => {
-  addCmodal.style.display = 'none';
+closeModal.addEventListener("click", () => {
+  addCmodal.style.display = "none";
   resetModalValues();
 });
-closeEdit.addEventListener('click', () => {
-  editCmodal.style.display = 'none';
+closeEdit.addEventListener("click", () => {
+  editCmodal.style.display = "none";
   resetModalValues();
 });
-closeLogin.addEventListener('click', () => {
-  loginModal.style.display = 'none';
+closeLogin.addEventListener("click", () => {
+  loginModal.style.display = "none";
   resetModalValues();
 });
 
-window.onclick = event => {
+window.onclick = (event) => {
   if (
     event.target === addCmodal ||
     event.target === editCmodal ||
     event.target === loginModal
   ) {
-    addCmodal.style.display = 'none';
-    editCmodal.style.display = 'none';
-    loginModal.style.display = 'none';
+    addCmodal.style.display = "none";
+    editCmodal.style.display = "none";
+    loginModal.style.display = "none";
     resetModalValues();
   }
 };
 
 function resetModalValues() {
-  addCName.value = '';
-  addTotalHours.value = '';
-  addCCurrHours.value = '';
-  addCProgress.value = '';
-  editName.value = '';
-  editHours.value = '';
-  editCurHours.value = '';
-  editProgress.value = '';
+  addCName.value = "";
+  addTotalHours.value = "";
+  addCCurrHours.value = "";
+  addCProgress.value = "";
+  editName.value = "";
+  editHours.value = "";
+  editCurHours.value = "";
+  editProgress.value = "";
   if (!state.codes) {
-    document.getElementById('emailText').value = '';
-    document.getElementById('passwordText').value = '';
+    document.getElementById("emailText").value = "";
+    document.getElementById("passwordText").value = "";
   }
 }
 // authCheck();
@@ -859,8 +862,8 @@ async function authCheck() {
   }
 }
 
-sampleLink.addEventListener('click', async () => {
-  console.log('click');
+sampleLink.addEventListener("click", async () => {
+  console.log("click");
 
   if (!state.got) {
     apiGetTestCourses();
@@ -868,21 +871,21 @@ sampleLink.addEventListener('click', async () => {
 });
 
 async function apiGetCourses() {
-  const apiUrl = config.API_URL.replace('{id}', state.currentUser);
+  const apiUrl = config.API_URL.replace("{id}", state.currentUser);
   axios
     .get(apiUrl)
-    .then(response => {
+    .then((response) => {
       const courses = response.data.courses;
       courses.forEach(
-        courses =>
+        (courses) =>
           new CourseItem(courses.name, courses.totalHours, courses.progress)
       );
       console.log(state.courses, state.displayCourses);
       state.got = true;
       toggleCompleted();
     })
-    .catch(error => {
-      console.error('Error fetching courses:', error);
+    .catch((error) => {
+      console.error("Error fetching courses:", error);
     });
 
   sampleClose();
@@ -892,10 +895,10 @@ async function apiGetTestCourses() {
   const apiUrl = config.API_TEST_URL;
   axios
     .get(apiUrl)
-    .then(response => {
+    .then((response) => {
       const courses = response.data.courses;
       courses.forEach(
-        courses =>
+        (courses) =>
           new CourseItem(courses.name, courses.totalHours, courses.progress)
       );
       console.log(state.courses, state.displayCourses);
@@ -903,42 +906,42 @@ async function apiGetTestCourses() {
 
       toggleCompleted();
     })
-    .catch(error => {
-      console.error('Error fetching courses:', error);
+    .catch((error) => {
+      console.error("Error fetching courses:", error);
     });
 
   sampleClose();
 }
 
-cloudIcon.addEventListener('click', async () => {
+cloudIcon.addEventListener("click", async () => {
   if (await authCheck()) {
-    const apiURL = config.API_PUT_URL.replace('{id}', state.currentUser);
+    const apiURL = config.API_PUT_URL.replace("{id}", state.currentUser);
     console.log(state.courses);
     const courseString = JSON.stringify(state.courses);
     axios
       .put(apiURL, courseString)
-      .then(response => console.log('Success:', response.data))
-      .catch(error => console.error('Error:', error));
+      .then((response) => console.log("Success:", response.data))
+      .catch((error) => console.error("Error:", error));
   } else {
-    console.log('Authorization failed');
+    console.log("Authorization failed");
   }
 });
 
 //STARTUP DISPLAY
 function samplePrompt() {
-  ultraCont.classList.add('sampler');
-  pieChart.style.display = 'none';
-  messageCont.style.display = 'flex';
+  ultraCont.classList.add("sampler");
+  pieChart.style.display = "none";
+  messageCont.style.display = "flex";
 
-  topCont.style.marginBottom = '0rem';
-  smallMode.removeEventListener('change', handleMediaQuery);
-  addCmodal.classList.remove('small-modal');
+  topCont.style.marginBottom = "0rem";
+  smallMode.removeEventListener("change", handleMediaQuery);
+  addCmodal.classList.remove("small-modal");
 }
 function sampleClose() {
-  ultraCont.classList.remove('sampler');
-  pieChart.style.display = 'flex';
-  messageCont.style.display = 'none';
-  smallMode.addEventListener('change', handleMediaQuery);
+  ultraCont.classList.remove("sampler");
+  pieChart.style.display = "flex";
+  messageCont.style.display = "none";
+  smallMode.addEventListener("change", handleMediaQuery);
   handleMediaQuery(smallMode);
 }
 
@@ -949,7 +952,7 @@ function completed() {
     compRemHours = 0,
     compTotHours = 0;
 
-  state.courses.forEach(course => {
+  state.courses.forEach((course) => {
     compTotHours += course.completedHours();
     compRemHours += course.remainingHours();
   });
@@ -980,21 +983,21 @@ function updatePie(percentage, remPercent) {
   const degrees = (percentage / 100) * 360;
   const color = percentColor(percentage);
   const remColor = percentColor(remPercent);
-  pieChart.style.setProperty('--percent', `${degrees}deg`);
-  pieChart.style.setProperty('--color', color);
-  pieChart.style.setProperty('--color2', remColor);
+  pieChart.style.setProperty("--percent", `${degrees}deg`);
+  pieChart.style.setProperty("--color", color);
+  pieChart.style.setProperty("--color2", remColor);
   pieLabel.textContent = `${percentage} %`;
 }
 function displayInfo(id) {
-  const course = state.courses.find(course => course.id === id);
-  const chartText = document.getElementById('chartText');
-  chartText.innerHTML = '';
+  const course = state.courses.find((course) => course.id === id);
+  const chartText = document.getElementById("chartText");
+  chartText.innerHTML = "";
 
-  const percentage = document.createElement('span');
+  const percentage = document.createElement("span");
   percentage.textContent = `   (${course.percent()}%)`;
   percentage.style.color = percentColor(course.percent());
 
-  const hours = document.createElement('span');
+  const hours = document.createElement("span");
   hours.textContent = ` -  ${course.completedHours()} hours`;
   hours.style.color = bigColor(course.completedHours());
   chartText.textContent = `${course.name}`;
