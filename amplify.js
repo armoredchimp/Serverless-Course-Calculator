@@ -1,8 +1,11 @@
+const userId = process.env.USER_POOL_ID;
+const clientId = process.env.USER_POOL_CLIENT_ID;
+
 const amplifyConfig = {
   Auth: {
     Cognito: {
-      userPoolId: 'us-west-2_98u65X5GV',
-      userPoolClientId: '28eomo5pfl4tsavbn9rha1t3tn',
+      userPoolId: userId,
+      userPoolClientId: clientId,
     },
   },
 };
