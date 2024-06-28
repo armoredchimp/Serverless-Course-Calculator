@@ -871,7 +871,7 @@ sampleLink.addEventListener("click", async () => {
 });
 
 async function apiGetCourses() {
-  const apiUrl = config.API_URL.replace("{id}", state.currentUser);
+  const apiUrl = config.awsURL.replace("{id}", state.currentUser);
   axios
     .get(apiUrl)
     .then((response) => {
@@ -892,7 +892,7 @@ async function apiGetCourses() {
 }
 
 async function apiGetTestCourses() {
-  const apiUrl = config.API_TEST_URL;
+  const apiUrl = config.awsTestURL;
   axios
     .get(apiUrl)
     .then((response) => {
@@ -915,7 +915,7 @@ async function apiGetTestCourses() {
 
 cloudIcon.addEventListener("click", async () => {
   if (await authCheck()) {
-    const apiURL = config.API_PUT_URL.replace("{id}", state.currentUser);
+    const apiURL = config.awsURL.replace("{id}", state.currentUser);
     console.log(state.courses);
     const courseString = JSON.stringify(state.courses);
     axios
