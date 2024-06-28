@@ -291,6 +291,7 @@ async function userLogin({ email, password }) {
     resetModalValues();
     setTimeout(async () => {
       if (await authCheck()) {
+        samplePrompt();
         apiGetCourses();
         renderCourses();
         loginBtn.style.display = "none";
