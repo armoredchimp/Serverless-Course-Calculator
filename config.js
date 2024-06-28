@@ -1,8 +1,4 @@
-const config = {
-  API_URL:
-    'https://nc2ituc9o9.execute-api.us-west-2.amazonaws.com/dev/users/{id}',
-  API_PUT_URL:
-    'https://nc2ituc9o9.execute-api.us-west-2.amazonaws.com/dev/users/{id}',
-  API_TEST_URL:
-    'https://nc2ituc9o9.execute-api.us-west-2.amazonaws.com/dev/users/test',
+export const config = {
+  API_URL: process.env.API_URL,
+  API_TEST_URL: process.env.API_TEST_URL,
 };

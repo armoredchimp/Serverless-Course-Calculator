@@ -29,6 +29,7 @@ import amplifyConfig from './amplify.js';
 Amplify.configure(amplifyConfig);
 const currentConfig = Amplify.getConfig();
 console.log(currentConfig);
+
 //Selectors
 const smallMode = window.matchMedia('(max-width: 375px)');
 const topCont = document.querySelector('.top-cont');
