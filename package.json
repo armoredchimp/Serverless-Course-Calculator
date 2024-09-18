@@ -3,7 +3,8 @@
     "build": "webpack --mode production"
   },
   "dependencies": {
-    "aws-amplify": "^6.0.16"
+    "aws-amplify": "^6.0.16",
+    "axios": "^1.7.2"
   },
   "devDependencies": {
     "@types/amplify": "^1.1.28",

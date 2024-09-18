@@ -286,7 +286,7 @@ h4 {
   display: none;
 }
 .minus-icon {
-  width: 2%;
+  width: 24px;
   cursor: pointer;
   color: var(--minus-color);
 }

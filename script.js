@@ -32,7 +32,7 @@ const currentConfig = Amplify.getConfig();
 console.log(currentConfig);
 
 //Selectors
-const smallMode = window.matchMedia("(max-width: 375px)");
+const smallMode = window.matchMedia("(max-width: 440px)");
 const topCont = document.querySelector(".top-cont");
 //Main Body for course list
 const courseUL = document.querySelector(".courses");
@@ -947,6 +947,7 @@ function sampleClose() {
 }
 
 //RESULT SECTION
+ // Function to determine total values and final calulations of courseload
 function completed() {
   let compPercent = 0,
     compRemPercent = 0,
